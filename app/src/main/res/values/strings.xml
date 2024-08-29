@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Quran</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_qibla">Qibla</string>
+    <string name="title_prayertime">PrayerTime</string>
+    <string name="title_calendar">Calendar</string>
+    <string name="title_favourite">Favourites</string>
+    <string name="loading_qibla">loading Qibla..</string>
+    <string name="qibla_direction">Qibla Direction</string>
+    <string name="title_tasbih">Tasbih\n</string>
+</resources>
