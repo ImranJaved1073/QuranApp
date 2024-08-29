@@ -7,22 +7,28 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface QuranApi {
-    @GET("surah")
-    suspend fun getSurahs(): SurahResponse
+    @GET("Surah")
+    suspend fun getSurahs(): List<Surah>
 
-    @GET("surah/{surahNumber}")
-    suspend fun getVerses(@Path("surahNumber") surahNumber: Int): VerseResponse
+    @GET("Para")
+    suspend fun getParahs(): List<Para>
 
-    @GET("surah/{surahNumber}/en.asad")
-    suspend fun getEnglishTranslation(@Path("surahNumber") surahNumber: Int): EnglishVerseResponse
+    @GET("Surah/{suraID}")
+    suspend fun getVerses(@Path("suraID") surahNumber: Int): VerseResponse
 
-    @GET("surah/{surahNumber}/ur.ahmedali")
-    suspend fun getUrduTranslation(@Path("surahNumber") surahNumber: Int): UrduVerseResponse
+    @GET("Para/{paraID}")
+    suspend fun getParaVerses(@Path("paraID") paraNumber: Int): ParaResponse
+
+//    @GET("surah/{surahNumber}/en.asad")
+//    suspend fun getEnglishTranslation(@Path("surahNumber") surahNumber: Int): EnglishVerseResponse
+//
+//    @GET("surah/{surahNumber}/ur.ahmedali")
+//    suspend fun getUrduTranslation(@Path("surahNumber") surahNumber: Int): UrduVerseResponse
 
 
 }
 object RetrofitClient {
-    private const val BASE_URL = "https://api.alquran.cloud/v1/"
+    private const val BASE_URL = "http://192.168.100.11:5207/api/"
 
     val api: QuranApi by lazy {
         Retrofit.Builder()

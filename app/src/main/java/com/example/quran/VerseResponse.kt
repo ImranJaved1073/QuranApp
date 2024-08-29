@@ -1,7 +1,8 @@
 package com.example.quran
 
 data class VerseResponse(
-    val data: SurahData
+    val ayahs: List<Verse>,
+    val surah: Surah
 )
 
 data class UrduVerseResponse(

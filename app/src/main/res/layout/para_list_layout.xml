@@ -15,14 +15,14 @@
 
 
         <TextView
-            android:id="@+id/surahNumber"
+            android:id="@+id/paraNumber"
             android:layout_width="@dimen/_50sdp"
             android:layout_height="@dimen/_50sdp"
             android:layout_marginEnd="@dimen/_5sdp"
             android:background="@mipmap/islamic_star_foreground"
             android:backgroundTint="#588B76"
             android:gravity="center"
-            android:text="114"
+            android:text="1"
             android:textColor="@color/black"
             android:textSize="@dimen/_10ssp"
             android:textStyle="bold" />
@@ -35,28 +35,28 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/surahEnglishName"
+                android:id="@+id/paraEnglishName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Al-Fatiha"
+                android:text="Alif Laam Meem"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/primaryTextColor"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/surahVerses"
+                android:id="@+id/paraVerses"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="MECCAN • 7 VERSES"
+                android:text="500 VERSES"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/secondaryTextColor" />
         </LinearLayout>
 
         <TextView
-            android:id="@+id/surahArabicName"
+            android:id="@+id/paraArabicName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/al_qalam"
+            android:fontFamily="@font/noorehuda"
             android:text="الفاتحة"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/green"

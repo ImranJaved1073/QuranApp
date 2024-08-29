@@ -40,6 +40,8 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
@@ -53,6 +55,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            android.R.id.home -> {
+                // Handle the up navigation (back button)
+                onBackPressed()
+                true
+            }
             R.id.action_settings -> {
                 // Start the SettingsActivity
                 val intent = Intent(this, SettingsActivity::class.java)

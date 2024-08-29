@@ -7,9 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class VerseAdapter(
-    private val arabicAyats: List<Verse>,
-    private val englishAyats: List<Verse>,
-    private val urduAyats: List<Verse>
+    private val arabicAyats: List<Verse>
 ) : RecyclerView.Adapter<VerseAdapter.AyatViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AyatViewHolder {
@@ -19,20 +17,25 @@ class VerseAdapter(
 
     override fun onBindViewHolder(holder: AyatViewHolder, position: Int) {
         val arabicAyat = arabicAyats[position]
-        val englishAyat = englishAyats[position]
-        val urduAyat = urduAyats[position]
 
-        holder.bind(arabicAyat, englishAyat, urduAyat)
+        holder.bind(arabicAyat)
     }
 
     override fun getItemCount(): Int = arabicAyats.size
 
+    fun scrollToAyahNumber(ayahNumber: Int) {
+        // This method should be called after the adapter is set to RecyclerView
+        val position = arabicAyats.indexOfFirst { it.ayaNo == ayahNumber }
+        if (position != -1) {
+            notifyItemChanged(position)
+        }
+    }
+
     class AyatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(arabicAyat: Verse, englishAyat: Verse, urduAyat: Verse) {
-            itemView.findViewById<TextView>(R.id.ayahNumber).text = arabicAyat.numberInSurah.toString()
-            itemView.findViewById<TextView>(R.id.ayahArabicText).text = arabicAyat.text
-            itemView.findViewById<TextView>(R.id.ayahEnglishTranslation).text = englishAyat.text
-            itemView.findViewById<TextView>(R.id.ayahUrduTranslation).text = urduAyat.text
+        fun bind(arabicAyat: Verse) {
+            itemView.findViewById<TextView>(R.id.ayahArabicText).text = arabicAyat.arabicText
+            itemView.findViewById<TextView>(R.id.ayahEnglishTranslation).text = arabicAyat.drMohsinKhan
+            itemView.findViewById<TextView>(R.id.ayahUrduTranslation).text = arabicAyat.fatehMuhammadJalandhrield
         }
     }
 }

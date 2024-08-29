@@ -7,7 +7,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-
+    <color name="blue">#3F51B5</color>
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorSecondary">#03DAC5</color>
@@ -17,6 +17,6 @@
     <color name="secondaryTextColor">#666666</color>
     <color name="light_gray_transparent">#80B0B0B0</color>
     <color name="green">#588B76</color>
-
+    <color name="englishcolor">#5E6564</color>
 </resources>
 
