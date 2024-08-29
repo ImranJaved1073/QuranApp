@@ -7,8 +7,6 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:orientation="vertical"
-    android:paddingRight="@dimen/_7sdp"
-    android:paddingLeft="@dimen/_7sdp"
     tools:context=".MainActivity">
 
     <com.google.android.material.card.MaterialCardView
@@ -18,7 +16,6 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:background="@drawable/card_gradient"
             android:gravity="center"
             android:paddingTop="5dp"
@@ -26,7 +23,6 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:src="@drawable/img"
                 app:tint="@color/white" />
         </RelativeLayout>
@@ -41,18 +37,12 @@
         android:background="@drawable/search_box"
         android:iconifiedByDefault="false"
         android:padding="1dp"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:layout_marginStart="@dimen/_4sdp"
-        android:layout_marginEnd="@dimen/_4sdp"
-        android:layout_marginBottom="@dimen/_8sdp"
         app:iconifiedByDefault="false" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/surahRV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/_40sdp"
-        tools:listitem="@layout/surah_list_layout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
