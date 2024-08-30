@@ -10,7 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 
 class SplashActivity : AppCompatActivity() {
 
-    private val SPLASH_DURATION: Long = 3500 // 2 seconds
+    private val SPLASH_DURATION: Long = 2000 // 2 seconds
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

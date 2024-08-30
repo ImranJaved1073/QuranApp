@@ -8,22 +8,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresExtension
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.quran.R
 import com.example.quran.RetrofitClient
 import com.example.quran.SurahAdapter
-import com.example.quran.VerseFragment
 import com.example.quran.databinding.FragmentHomeBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
-import androidx.navigation.fragment.findNavController
 
 class HomeFragment : Fragment() {
 
@@ -33,7 +29,6 @@ class HomeFragment : Fragment() {
     private lateinit var adapter: SurahAdapter
 
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
-    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,16 +40,6 @@ class HomeFragment : Fragment() {
 
         binding.surahRV.layoutManager = LinearLayoutManager(context)
         adapter = SurahAdapter(emptyList()) { surahNumber ->
-            // Create a new instance of VerseFragment
-            val verseFragment = VerseFragment().apply {
-                arguments = Bundle().apply {
-                    putInt("SURAH_NUMBER", surahNumber)
-                    putString("SURAH_NAME", homeViewModel.getSurahName(surahNumber))
-                    putString("SURAH_ARABIC_NAME", homeViewModel.getSurahArabicName(surahNumber))
-                }
-            }
-
-            findNavController().navigate(R.id.action_navigation_home_to_navigation_SurahAyats3, verseFragment.arguments)
         }
         binding.surahRV.adapter = adapter
 
@@ -80,11 +65,9 @@ class HomeFragment : Fragment() {
     }
 
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
-    @RequiresApi(Build.VERSION_CODES.S)
     private fun fetchSurahs() {
         GlobalScope.launch(Dispatchers.IO) {
             try {
-                val surahs = RetrofitClient.api.getSurahs()
 
                 // Update the LiveData on the main thread
                 withContext(Dispatchers.Main) {
