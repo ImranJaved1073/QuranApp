@@ -48,9 +48,9 @@ class SurahAdapter(
             itemView.findViewById<TextView>(R.id.surahNumber).text = surah.number.toString()
             itemView.findViewById<TextView>(R.id.surahArabicName).text = surah.number.toString()
             itemView.findViewById<TextView>(R.id.surahEnglishName).text = surah.englishName
-            itemView.findViewById<TextView>(R.id.surahVerses).text = "${surah.revelationType} Verses ${surah.numberOfAyahs}"
+            itemView.findViewById<TextView>(R.id.surahVerses).text = "Verses ${surah.numberOfAyahs}"
             itemView.findViewById<ImageView>(R.id.imageMakkaMadina).setImageResource(
-                if (surah.revelationType == "Meccan") R.drawable.ic_makka else R.drawable.ic_madina
+                if (surah.revelationType == "Meccan") R.drawable.ic_makkah else R.drawable.ic_madinah
             )
         }
     }
