@@ -8,34 +8,38 @@
     android:background="@drawable/fb264e182dcdd061e57a16557d3297eb"
     tools:context=".SplashActivity">
 
-    <ImageView
-        android:id="@+id/splash_logo"
+    <!-- RelativeLayout to position TextView above ImageView -->
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/quran"
+        android:layout_centerInParent="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.389"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintVertical_bias="0.243">
 
-    <ImageView
-        android:id="@+id/splash_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/splash_logo"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/arcticons_al_quran_indonesia"
-        android:textColor="@android:color/white"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.274"
-        tools:ignore="MissingConstraints" />
+        <TextView
+            android:id="@+id/quran_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/suranamefont"
+            android:gravity="center"
+            android:text="121"
+            android:textColor="@color/qurancolor"
+            android:textSize="@dimen/_80ssp" />
+
+        <ImageView
+            android:id="@+id/splash_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/quran_text"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/quran" />
+
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

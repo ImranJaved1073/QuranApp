@@ -37,8 +37,8 @@ class VerseFragment : Fragment() {
         val ayahNumberToScroll = arguments?.getInt("AYAH_NUMBER", -1) ?: -1
 
         // Update the UI with Surah details
+        view.findViewById<TextView>(R.id.tvSurahArabicName).text = surahNumber.toString()
         view.findViewById<TextView>(R.id.tvSurahName).text = surahName
-        view.findViewById<TextView>(R.id.tvSurahArabicName).text = surahArabicName
 
         // Fetch Ayats and setup SearchView
         setupSearchView(view)

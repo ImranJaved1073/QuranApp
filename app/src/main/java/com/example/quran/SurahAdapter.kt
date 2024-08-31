@@ -3,6 +3,7 @@ package com.example.quran
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
@@ -45,9 +46,12 @@ class SurahAdapter(
     class SurahViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(surah: Surah) {
             itemView.findViewById<TextView>(R.id.surahNumber).text = surah.number.toString()
-            itemView.findViewById<TextView>(R.id.surahArabicName).text = surah.name
+            itemView.findViewById<TextView>(R.id.surahArabicName).text = surah.number.toString()
             itemView.findViewById<TextView>(R.id.surahEnglishName).text = surah.englishName
-            itemView.findViewById<TextView>(R.id.surahVerses).text = surah.revelationType + surah.numberOfAyahs
+            itemView.findViewById<TextView>(R.id.surahVerses).text = "${surah.revelationType} Verses ${surah.numberOfAyahs}"
+            itemView.findViewById<ImageView>(R.id.imageMakkaMadina).setImageResource(
+                if (surah.revelationType == "Meccan") R.drawable.ic_makka else R.drawable.ic_madina
+            )
         }
     }
 }

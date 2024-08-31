@@ -28,7 +28,7 @@ interface QuranApi {
 
 }
 object RetrofitClient {
-    private const val BASE_URL = "http://192.168.100.11:5207/api/"
+    private const val BASE_URL = "https://quranapiservice-ekfkd2dvcsbmekcq.eastus-01.azurewebsites.net/api/"
 
     val api: QuranApi by lazy {
         Retrofit.Builder()

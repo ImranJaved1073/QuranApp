@@ -24,10 +24,15 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp">
 
-            <ImageView
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/img"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_height="match_parent"
+                android:text="122115123"
+                android:gravity="center"
+                android:textSize="@dimen/_50ssp"
+                android:textColor="@color/white"
+                android:fontFamily="@font/suranamefont"
                 app:tint="@color/white" />
         </RelativeLayout>
     </com.google.android.material.card.MaterialCardView>
