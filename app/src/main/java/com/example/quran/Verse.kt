@@ -11,5 +11,6 @@ data class Verse(
     val muftiTaqiUsmani: String, // Non-nullable String for MuftiTaqiUsmani
     val rakuID: Int?, // Nullable Int for RakuID
     val pRakuID: Int?, // Nullable Int for PRakuID
-    val paraID: Int? // Nullable Int for ParaID
+    val paraID: Int?, // Nullable Int for ParaID
+    val pAyatID: Int? // Nullable Int for PAyaID
 )

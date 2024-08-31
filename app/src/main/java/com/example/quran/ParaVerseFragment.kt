@@ -107,8 +107,8 @@ class ParaVerseFragment : Fragment() {
         // Ensure ayatsList is not empty or null
         if (ayatsList.isNotEmpty()) {
             val index = ayatsList.indexOfFirst {
-                it.ayaID.toString() == query ||
-                        it.ayaID.toString().contains(query, ignoreCase = true)
+                it.pAyatID.toString() == query ||
+                        it.pAyatID.toString().contains(query, ignoreCase = true)
             }
 
             if (index != -1) {
