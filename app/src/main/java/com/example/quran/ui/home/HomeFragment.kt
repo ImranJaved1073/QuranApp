@@ -1,6 +1,7 @@
 package com.example.quran.ui.home
 
-import android.net.http.HttpException
+import android.content.Intent
+import retrofit2.HttpException
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,6 +25,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
 import androidx.navigation.fragment.findNavController
+import com.example.quran.VerseActivity
 
 class HomeFragment : Fragment() {
 
@@ -46,19 +48,16 @@ class HomeFragment : Fragment() {
         binding.surahRV.layoutManager = LinearLayoutManager(context)
         adapter = SurahAdapter(emptyList()) { surahNumber ->
             // Create a new instance of VerseFragment
-            val verseFragment = VerseFragment().apply {
-                arguments = Bundle().apply {
-                    putInt("SURAH_NUMBER", surahNumber)
-                    putString("SURAH_NAME", homeViewModel.getSurahName(surahNumber))
-                    putString("SURAH_ARABIC_NAME", homeViewModel.getSurahArabicName(surahNumber))
-                }
+            val intent = Intent(requireContext(), VerseActivity::class.java).apply {
+                putExtra("SURAH_NUMBER", surahNumber)
+                putExtra("SURAH_NAME", homeViewModel.getSurahName(surahNumber))
+                putExtra("SURAH_ARABIC_NAME", homeViewModel.getSurahArabicName(surahNumber))
             }
-
-            findNavController().navigate(R.id.action_navigation_home_to_navigation_SurahAyats3, verseFragment.arguments)
+            startActivity(intent)
         }
         binding.surahRV.adapter = adapter
 
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        binding.suraListSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null) {
                     adapter.filter(query)
@@ -79,8 +78,7 @@ class HomeFragment : Fragment() {
         return root
     }
 
-    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
-    @RequiresApi(Build.VERSION_CODES.S)
+
     private fun fetchSurahs() {
         GlobalScope.launch(Dispatchers.IO) {
             try {

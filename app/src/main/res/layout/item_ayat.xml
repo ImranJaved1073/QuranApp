@@ -12,11 +12,11 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
-        app:cardCornerRadius="@dimen/_5ssp"
-        app:cardElevation="@dimen/_2sdp"
-        app:cardUseCompatPadding="true"
-        app:strokeWidth="0dp">
+        android:backgroundTint="#EEFDFCFC"
+        app:cardCornerRadius="@dimen/_2sdp"
+        app:cardElevation="@dimen/_1sdp"
+        android:layout_margin="@dimen/_2sdp"
+        app:strokeWidth="2dp">
 
         <!-- Enclose Ayah Content -->
         <LinearLayout

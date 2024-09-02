@@ -56,7 +56,7 @@
 
     <fragment
         android:id="@+id/navigation_prayerclock"
-        android:name="com.example.quran.ui.prayertime.PrayerTimeFragment"
+        android:name="com.example.quran.ui.PrayerTimeFragment"
         android:label="@string/title_prayertime"
         tools:layout="@layout/fragment_prayertime" />
 

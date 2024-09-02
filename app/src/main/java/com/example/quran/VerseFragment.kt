@@ -11,8 +11,10 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -48,7 +50,7 @@ class VerseFragment : Fragment() {
     }
 
     private fun fetchAyats(surahNumber: Int, ayahNumberToScroll: Int) {
-        GlobalScope.launch {
+        GlobalScope.launch(Dispatchers.IO) {
             try {
                 // Fetch Ayats using Retrofit with coroutines
                 val fetchedAyats = RetrofitClient.api.getVerses(surahNumber)
@@ -56,7 +58,7 @@ class VerseFragment : Fragment() {
                 val ayahs = fetchedAyats.ayahs
 
                 // Update the UI on the main thread
-                requireActivity().runOnUiThread {
+                withContext(Dispatchers.Main) {
                     ayatsList = ayahs // Update ayatsList with the fetched data
                     verseAdapter = VerseAdapter(ayatsList)
                     recyclerView.adapter = verseAdapter
@@ -70,15 +72,13 @@ class VerseFragment : Fragment() {
                 }
             } catch (e: IOException) {
                 // Handle network errors
-                requireActivity().runOnUiThread {
+                withContext(Dispatchers.Main) {
                     Toast.makeText(requireContext(), "Network Error: ${e.message}", Toast.LENGTH_SHORT).show()
-                    Log.e("VerseFragment", "Network Error: ${e.message}")
                 }
             } catch (e: HttpException) {
                 // Handle API errors
-                requireActivity().runOnUiThread {
+                withContext(Dispatchers.Main) {
                     Toast.makeText(requireContext(), "API Error: ${e.message}", Toast.LENGTH_SHORT).show()
-                    Log.e("VerseFragment", "API Error: ${e.message}")
                 }
             }
         }

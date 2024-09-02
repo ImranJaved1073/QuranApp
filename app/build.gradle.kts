@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.quran"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -66,4 +66,5 @@ dependencies {
     // Kotlin coroutines
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android.v170)
+
 }
