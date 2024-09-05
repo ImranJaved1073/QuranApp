@@ -1,20 +1,23 @@
 package com.example.quran
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.EditText
-import android.widget.SearchView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.quran.adapters.VerseAdapter
+import com.example.quran.dataAccess.SQLiteHelper
+import com.example.quran.models.Verse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -27,6 +30,7 @@ class VerseActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var verseAdapter: VerseAdapter
     private var ayatsList: List<Verse> = emptyList() // Initialize as an empty list
+    private lateinit var sqLiteHelper: SQLiteHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +42,8 @@ class VerseActivity : AppCompatActivity() {
 
         // Set the toolbar title to an empty string
         supportActionBar?.title = ""
+
+        sqLiteHelper = SQLiteHelper(this)
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         val isArabicEnabled = preferences.getBoolean("arabic_enabled", true)
@@ -74,15 +80,53 @@ class VerseActivity : AppCompatActivity() {
         isEnglishTranslationEnabled: Boolean,
         englishTranslationFontSize: Int
     ) {
-        GlobalScope.launch(Dispatchers.IO) {
+        if (isOnline()) {
+            GlobalScope.launch(Dispatchers.IO) {
+                try {
+                    val fetchedAyats = RetrofitClient.api.getVerses(surahNumber)
+                    val surah = fetchedAyats.surah
+                    val ayahs = fetchedAyats.ayahs
+
+                    sqLiteHelper = SQLiteHelper(this@VerseActivity)
+                    sqLiteHelper.insertVerses(ayahs)
+
+                    withContext(Dispatchers.Main) {
+                        ayatsList = ayahs
+
+                        verseAdapter = VerseAdapter(
+                            ayatsList,
+                            isArabicEnabled,
+                            isTranslationEnabled,
+                            arabicFontSize,
+                            translationFontSize,
+                            isEnglishTranslationEnabled,
+                            englishTranslationFontSize
+                        )
+
+                        recyclerView.adapter = verseAdapter
+
+                        if (ayahNumberToScroll != -1) {
+                            recyclerView.scrollToPosition(
+                                ayatsList.indexOfFirst { it.ayaNo == ayahNumberToScroll }
+                            )
+                        }
+                    }
+                } catch (e: IOException) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@VerseActivity, "Network Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+                } catch (e: HttpException) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@VerseActivity, "API Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+        else {
             try {
-                val fetchedAyats = RetrofitClient.api.getVerses(surahNumber)
-                val surah = fetchedAyats.surah
-                val ayahs = fetchedAyats.ayahs
-
-                withContext(Dispatchers.Main) {
-                    ayatsList = ayahs
-
+                sqLiteHelper = SQLiteHelper(this)
+                ayatsList = sqLiteHelper.getVerses(surahNumber)
+                if (ayatsList.isNotEmpty()) {
                     verseAdapter = VerseAdapter(
                         ayatsList,
                         isArabicEnabled,
@@ -92,24 +136,20 @@ class VerseActivity : AppCompatActivity() {
                         isEnglishTranslationEnabled,
                         englishTranslationFontSize
                     )
-
                     recyclerView.adapter = verseAdapter
-
                     if (ayahNumberToScroll != -1) {
                         recyclerView.scrollToPosition(
                             ayatsList.indexOfFirst { it.ayaNo == ayahNumberToScroll }
                         )
                     }
+                } else {
+                    Toast.makeText(this, "No data available offline.", Toast.LENGTH_SHORT).show()
                 }
-            } catch (e: IOException) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@VerseActivity, "Network Error: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
-            } catch (e: HttpException) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@VerseActivity, "API Error: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
+            } catch (e: Exception) {
+                // Handle exception when the table does not exist
+                Toast.makeText(this, "Error: Database not initialized.", Toast.LENGTH_SHORT).show()
             }
+
         }
     }
 
@@ -195,4 +235,12 @@ class VerseActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
+    private fun isOnline(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork ?: return false
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
 }

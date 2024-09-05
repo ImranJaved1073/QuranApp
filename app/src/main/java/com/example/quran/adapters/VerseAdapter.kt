@@ -1,10 +1,12 @@
-package com.example.quran
+package com.example.quran.adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.quran.R
+import com.example.quran.models.Verse
 
 class VerseAdapter(
     private val verses: List<Verse>,

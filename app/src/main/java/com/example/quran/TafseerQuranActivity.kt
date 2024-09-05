@@ -10,6 +10,7 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.quran.adapters.PdfPageAdapter
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException

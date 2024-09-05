@@ -1,4 +1,4 @@
-package com.example.quran
+package com.example.quran.adapters
 
 import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer
@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.github.chrisbanes.photoview.PhotoView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.quran.R
 
 class PdfPageAdapter(private val pdfRenderer: PdfRenderer) : RecyclerView.Adapter<PdfPageAdapter.PageViewHolder>() {
 

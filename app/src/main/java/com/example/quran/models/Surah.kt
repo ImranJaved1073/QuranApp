@@ -1,4 +1,4 @@
-package com.example.quran
+package com.example.quran.models
 
 data class Surah(
     val number: Int,

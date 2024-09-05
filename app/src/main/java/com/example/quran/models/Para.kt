@@ -1,4 +1,4 @@
-package com.example.quran
+package com.example.quran.models
 
 data class Para(
     val paraID: Int,

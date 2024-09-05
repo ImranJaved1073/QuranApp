@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.quran.RetrofitClient
-import com.example.quran.SurahAdapter
+import com.example.quran.adapters.SurahAdapter
 import com.example.quran.TafseerQuranActivity
 import com.example.quran.PrayerTimeViewModel
 import com.example.quran.databinding.FragmentPrayertimeBinding

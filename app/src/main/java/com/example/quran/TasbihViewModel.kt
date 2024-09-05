@@ -3,6 +3,7 @@ package com.example.quran
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.quran.models.Para
 
 class TasbihViewModel : ViewModel() {
 

@@ -1,5 +1,8 @@
 package com.example.quran
 
+import com.example.quran.models.Surah
+import com.example.quran.models.Verse
+
 data class VerseResponse(
     val ayahs: List<Verse>,
     val surah: Surah

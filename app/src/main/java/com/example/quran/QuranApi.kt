@@ -1,5 +1,9 @@
 package com.example.quran
 
+import com.example.quran.models.Para
+import com.example.quran.models.Surah
+import com.example.quran.models.Verse
+import com.example.quran.responses.ParaResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET

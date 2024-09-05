@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.quran.ParaAdapter
+import com.example.quran.adapters.ParaAdapter
 import com.example.quran.ParaVerseFragment
 import com.example.quran.R
 import com.example.quran.RetrofitClient

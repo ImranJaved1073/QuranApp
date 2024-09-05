@@ -3,7 +3,7 @@ package com.example.quran.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.quran.Surah
+import com.example.quran.models.Surah
 
 class HomeViewModel : ViewModel() {
 

@@ -25,6 +25,7 @@ activity = "1.9.1"
 navigationUiKtxVersion = "2.6.0"
 photoview = "2.3.0"
 retrofit = "2.9.0"
+roomRuntime = "2.6.1"
 rxbinding3 = "3.1.0"
 sdpAndroid = "1.1.1"
 sdpx = "1.0.6"
@@ -42,6 +43,8 @@ androidx-lifecycle-livedata-ktx-v251 = { module = "androidx.lifecycle:lifecycle-
 androidx-lifecycle-viewmodel-ktx-v251 = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtxVersion" }
 androidx-navigation-fragment-ktx-v260 = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtxVersion" }
 androidx-navigation-ui-ktx-v260 = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationUiKtxVersion" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 io-reactivex-rxjava3-rxjava5 = { module = "io.reactivex.rxjava3:rxjava", version.ref = "ioReactivexRxjava3Rxjava4" }
