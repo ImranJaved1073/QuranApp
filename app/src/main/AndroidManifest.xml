@@ -17,6 +17,10 @@
         android:theme="@style/Theme.Quran"
         tools:targetApi="31">
         <activity
+            android:name=".TafseerQuranActivity"
+            android:exported="false"
+            android:label="Tafseer Quran"/>
+        <activity
             android:name=".VerseActivity"
             android:exported="false" />
         <activity
@@ -25,7 +29,7 @@
         <activity
             android:name=".SplashActivity"
             android:exported="true"
-            android:label="@string/app_name"
+            android:label="QuranApp"
             android:theme="@style/Theme.QuranApp.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

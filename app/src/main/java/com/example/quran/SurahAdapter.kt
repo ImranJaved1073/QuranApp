@@ -38,6 +38,7 @@ class SurahAdapter(
     fun filter(query: String) {
         val filteredList = fullSurahList.filter {
             it.number.toString().contains(query, ignoreCase = true)
+            || it.englishName.contains(query, ignoreCase = true)
         }
         surahs = filteredList
         notifyDataSetChanged()

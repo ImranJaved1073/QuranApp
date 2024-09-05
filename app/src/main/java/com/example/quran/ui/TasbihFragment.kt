@@ -42,7 +42,7 @@ class TasbihFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        tasbihViewModel = ViewModelProvider(this).get(TasbihViewModel::class.java)
+        tasbihViewModel = ViewModelProvider(this)[TasbihViewModel::class.java]
         _binding = FragmentTasbihBinding.inflate(inflater, container, false)
         val root: View = binding.root
 

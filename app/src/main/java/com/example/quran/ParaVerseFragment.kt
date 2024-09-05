@@ -9,6 +9,7 @@ import android.widget.SearchView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.GlobalScope
@@ -28,6 +29,14 @@ class ParaVerseFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_para_verse, container, false)
 
+        val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val isArabicEnabled = preferences.getBoolean("arabic_enabled", true)
+        val isTranslationEnabled = preferences.getBoolean("translation_enabled", true)
+        val arabicFontSize = preferences.getInt("arabic_font_size", 22)
+        val translationFontSize = preferences.getInt("translation_font_size", 22)
+        val isEnglishTranslationEnabled = preferences.getBoolean("english_translation_enabled", true)
+        val englishTranslationFontSize = preferences.getInt("english_translation_font_size", 18)
+
         recyclerView = view.findViewById(R.id.ayatParaRV)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
@@ -42,12 +51,15 @@ class ParaVerseFragment : Fragment() {
 
         // Fetch Ayats and setup SearchView
         setupSearchView(view)
-        fetchAyats(paraNumber, ayahNumberToScroll)
+        fetchAyats(paraNumber, ayahNumberToScroll,isArabicEnabled, isTranslationEnabled, arabicFontSize, translationFontSize, isEnglishTranslationEnabled,englishTranslationFontSize)
 
         return view
     }
 
-    private fun fetchAyats(paraNumber: Int, ayahNumberToScroll: Int) {
+    private fun fetchAyats(paraNumber: Int, ayahNumberToScroll: Int,isArabicEnabled: Boolean,
+                           isTranslationEnabled: Boolean,
+                           arabicFontSize: Int,
+                           translationFontSize: Int, isEnglishTranslationEnabled: Boolean, englishTranslationFontSize: Int) {
         GlobalScope.launch {
             try {
                 // Fetch Ayats using Retrofit with coroutines
@@ -58,7 +70,10 @@ class ParaVerseFragment : Fragment() {
                 // Update the UI on the main thread
                 requireActivity().runOnUiThread {
                     ayatsList = ayahs // Update ayatsList with the fetched data
-                    verseAdapter = VerseAdapter(ayatsList)
+                    verseAdapter = VerseAdapter(ayatsList,isArabicEnabled,
+                        isTranslationEnabled,
+                        arabicFontSize,
+                        translationFontSize, isEnglishTranslationEnabled, englishTranslationFontSize)
                     recyclerView.adapter = verseAdapter
 
                     // Scroll to the specified Ayah if provided

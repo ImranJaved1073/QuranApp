@@ -1,28 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:paddingRight="@dimen/_7sdp"
+    android:paddingLeft="@dimen/_7sdp"
+    tools:context=".MainActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewPdf"
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        app:cardCornerRadius="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/card_gradient"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_height="match_parent"
+                android:text="122126123"
+                android:gravity="center"
+                android:textSize="@dimen/_50ssp"
+                android:textColor="@color/white"
+                android:fontFamily="@font/suranamefont"
+                app:tint="@color/white" />
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+
+    <SearchView
+        android:id="@+id/suraListSearchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+        android:queryHint="Search by Surah Number"
+        android:background="@drawable/search_box"
+        android:iconifiedByDefault="false"
+        android:padding="1dp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginStart="@dimen/_4sdp"
+        android:layout_marginEnd="@dimen/_4sdp"
+        android:layout_marginBottom="@dimen/_8sdp"
+        app:iconifiedByDefault="false" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/buttonSearch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Search"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"
-        app:cornerRadius="@dimen/_2sdp"
-        app:icon="@drawable/baseline_search_24"
-        android:layout_marginBottom="@dimen/_30sdp"
-        app:iconGravity="textStart"
-        style="@style/Widget.MaterialComponents.Button"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/surahRV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/_40sdp"
+        tools:listitem="@layout/surah_list_layout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+
+
+
 </LinearLayout>

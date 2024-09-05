@@ -19,11 +19,7 @@
         android:id="@+id/navigation_SurahAyats"
         android:name="com.example.quran.VerseFragment"
         android:label="Quran"
-        tools:layout="@layout/fragment_verse" >
-        <action
-            android:id="@+id/action_navigation_SurahAyats_to_navigation_home"
-            app:destination="@id/navigation_home" />
-    </fragment>
+        tools:layout="@layout/fragment_verse" />
 
     <fragment
         android:id="@+id/navigation_Para_verse"

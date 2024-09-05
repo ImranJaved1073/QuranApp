@@ -25,17 +25,41 @@
             android:orientation="vertical"
             android:padding="@dimen/_10sdp">
 
-            <!-- Ayah Number -->
-            <!--            <TextView-->
-            <!--                android:id="@+id/ayahNumber"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:text="200"-->
-            <!--                android:textColor="@color/black"-->
-            <!--                android:textSize="@dimen/_17ssp"-->
-            <!--                android:textStyle="bold"-->
-            <!--                android:layout_gravity="center_horizontal"-->
-            <!--                android:layout_marginBottom="@dimen/_10sdp" />-->
+            <!-- Header Row with Ayah Number and Overflow Menu -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <!-- Ayah Number Label -->
+                <TextView
+                    android:id="@+id/ayahNumberLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="113:113"
+                    android:fontFamily="@font/ubuntu"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_8ssp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    android:gravity="center_vertical"/>
+
+                <!-- Space for overflow menu -->
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <!-- Overflow Menu Button -->
+                <ImageView
+                    android:id="@+id/overflowMenuButton"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:src="@drawable/ic_overflow_menu"
+                    android:layout_gravity="end"/>
+            </LinearLayout>
 
             <!-- Ayah Arabic Text -->
             <TextView

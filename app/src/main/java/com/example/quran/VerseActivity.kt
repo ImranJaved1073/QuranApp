@@ -1,6 +1,7 @@
 package com.example.quran
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -11,6 +12,7 @@ import android.widget.SearchView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
@@ -37,6 +39,14 @@ class VerseActivity : AppCompatActivity() {
         // Set the toolbar title to an empty string
         supportActionBar?.title = ""
 
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val isArabicEnabled = preferences.getBoolean("arabic_enabled", true)
+        val isTranslationEnabled = preferences.getBoolean("translation_enabled", true)
+        val isEnglishTranslationEnabled = preferences.getBoolean("english_translation_enabled", true)
+        val arabicFontSize = preferences.getInt("arabic_font_size", 22)
+        val translationFontSize = preferences.getInt("translation_font_size", 22)
+        val englishTranslationFontSize = preferences.getInt("english_translation_font_size", 18)
+
         recyclerView = findViewById(R.id.ayatRV)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -51,24 +61,40 @@ class VerseActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.tvSurahName).text = surahName
 
         // Fetch Ayats
-        fetchAyats(surahNumber, ayahNumberToScroll)
+        fetchAyats(surahNumber, ayahNumberToScroll, isArabicEnabled, isTranslationEnabled, arabicFontSize, translationFontSize, isEnglishTranslationEnabled,englishTranslationFontSize)
     }
 
-    private fun fetchAyats(surahNumber: Int, ayahNumberToScroll: Int) {
+    private fun fetchAyats(
+        surahNumber: Int,
+        ayahNumberToScroll: Int,
+        isArabicEnabled: Boolean,
+        isTranslationEnabled: Boolean,
+        arabicFontSize: Int,
+        translationFontSize: Int,
+        isEnglishTranslationEnabled: Boolean,
+        englishTranslationFontSize: Int
+    ) {
         GlobalScope.launch(Dispatchers.IO) {
             try {
-                // Fetch Ayats using Retrofit with coroutines
                 val fetchedAyats = RetrofitClient.api.getVerses(surahNumber)
                 val surah = fetchedAyats.surah
                 val ayahs = fetchedAyats.ayahs
 
-                // Update the UI on the main thread
                 withContext(Dispatchers.Main) {
-                    ayatsList = ayahs // Update ayatsList with the fetched data
-                    verseAdapter = VerseAdapter(ayatsList)
+                    ayatsList = ayahs
+
+                    verseAdapter = VerseAdapter(
+                        ayatsList,
+                        isArabicEnabled,
+                        isTranslationEnabled,
+                        arabicFontSize,
+                        translationFontSize,
+                        isEnglishTranslationEnabled,
+                        englishTranslationFontSize
+                    )
+
                     recyclerView.adapter = verseAdapter
 
-                    // Scroll to the specified Ayah if provided
                     if (ayahNumberToScroll != -1) {
                         recyclerView.scrollToPosition(
                             ayatsList.indexOfFirst { it.ayaNo == ayahNumberToScroll }
@@ -76,12 +102,10 @@ class VerseActivity : AppCompatActivity() {
                     }
                 }
             } catch (e: IOException) {
-                // Handle network errors
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@VerseActivity, "Network Error: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: HttpException) {
-                // Handle API errors
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@VerseActivity, "API Error: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
@@ -97,12 +121,17 @@ class VerseActivity : AppCompatActivity() {
             showSearchOptionsDialog()
             true
         }
+        menu?.findItem(R.id.action_settings)?.setOnMenuItemClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+            true
+        }
+
         return true
     }
 
     private fun showSearchOptionsDialog() {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Search By")
+        builder.setTitle("Find By")
 
         // Add options
         val options = arrayOf("Ayah", "Ruku")
@@ -121,14 +150,14 @@ class VerseActivity : AppCompatActivity() {
 
     private fun openSearchDialog(searchType: String) {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Search by $searchType")
+        builder.setTitle("Find by $searchType")
 
         // Set up the input field
         val input = EditText(this)
         input.hint = "Enter $searchType Number"
         builder.setView(input)
 
-        builder.setPositiveButton("Search") { _, _ ->
+        builder.setPositiveButton("Find") { _, _ ->
             val query = input.text.toString()
             searchAyat(query, searchType)
         }

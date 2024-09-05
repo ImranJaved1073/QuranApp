@@ -66,5 +66,6 @@ dependencies {
     // Kotlin coroutines
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android.v170)
+    implementation(libs.photoview)
 
 }

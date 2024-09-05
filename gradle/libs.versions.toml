@@ -3,6 +3,7 @@ adapterKotlinCoroutines = "0.9.2"
 agp = "8.5.0"
 gson = "2.10.1"
 ioReactivexRxjava3Rxjava4 = "3.1.6"
+islamicdate = "1.0.0"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -22,6 +23,7 @@ navigationFragmentKtxVersion = "2.6.0"
 navigationUiKtx = "2.7.7"
 activity = "1.9.1"
 navigationUiKtxVersion = "2.6.0"
+photoview = "2.3.0"
 retrofit = "2.9.0"
 rxbinding3 = "3.1.0"
 sdpAndroid = "1.1.1"
@@ -43,6 +45,7 @@ androidx-navigation-ui-ktx-v260 = { module = "androidx.navigation:navigation-ui-
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 io-reactivex-rxjava3-rxjava5 = { module = "io.reactivex.rxjava3:rxjava", version.ref = "ioReactivexRxjava3Rxjava4" }
+islamicdate = { module = "com.github.abdelrahman:IslamicDate", version.ref = "islamicdate" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -57,6 +60,7 @@ androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifec
 androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+photoview = { module = "com.github.chrisbanes:PhotoView", version.ref = "photoview" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 rxbinding3 = { module = "com.jakewharton.rxbinding3:rxbinding3", version.ref = "rxbinding3" }
 sdp-android = { module = "com.intuit.sdp:sdp-android", version.ref = "sdpAndroid" }

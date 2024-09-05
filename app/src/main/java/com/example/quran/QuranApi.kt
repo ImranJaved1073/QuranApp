@@ -19,14 +19,20 @@ interface QuranApi {
     @GET("Para/{paraID}")
     suspend fun getParaVerses(@Path("paraID") paraNumber: Int): ParaResponse
 
-//    @GET("surah/{surahNumber}/en.asad")
-//    suspend fun getEnglishTranslation(@Path("surahNumber") surahNumber: Int): EnglishVerseResponse
-//
-//    @GET("surah/{surahNumber}/ur.ahmedali")
-//    suspend fun getUrduTranslation(@Path("surahNumber") surahNumber: Int): UrduVerseResponse
+    @GET("Ayat/{ayaID}")
+    suspend fun getAyat(@Path("ayaID") ayaNumber: Int): Verse
+
 
 
 }
+
+
+
+interface UmmAlQuraApi {
+    @GET("date")
+    suspend fun getIslamicDate(@Query("date") date: String): IslamicDateResponse
+}
+
 object RetrofitClient {
     private const val BASE_URL = "https://quranapiservice-ekfkd2dvcsbmekcq.eastus-01.azurewebsites.net/api/"
 
@@ -38,4 +44,16 @@ object RetrofitClient {
             .create(QuranApi::class.java)
     }
 
+}
+
+object UmmAlQuraRetrofitClient {
+    private const val BASE_URL = "https://api.aladhan.com/v1/"
+
+    val api: UmmAlQuraApi by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(UmmAlQuraApi::class.java)
+    }
 }
