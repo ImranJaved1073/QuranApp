@@ -4,47 +4,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EEFDFCFC"
-    android:fitsSystemWindows="true"
-    tools:context=".VerseActivity">
+    android:background="@color/background"
+    tools:context=".ParaVerseActivity">
 
     <!-- AppBarLayout for collapsing toolbar effect -->
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="#0097F6E9"
-        android:fitsSystemWindows="true">
+        android:backgroundTint="#0097F6E9">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:contentScrim="#BBC3C1"
-            app:expandedTitleMarginStart="48dp"
-            app:expandedTitleMarginEnd="64dp">
+            android:background="#3BD3D3D3"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="@dimen/_4ssp"
-                app:layout_collapseMode="parallax">
+                android:padding="@dimen/_4sdp">
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_35ssp"
                     app:cardCornerRadius="@dimen/_6ssp">
 
                     <ImageView
                         android:id="@+id/backgroundImageView"
-                        android:layout_width="@dimen/_200sdp"
-                        android:layout_height="@dimen/_170sdp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:src="@drawable/ic_makkah"
+                        android:src="@drawable/image_33"
                         android:alpha="0.2" />
+
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -59,36 +53,27 @@
                         android:paddingBottom="@dimen/_15ssp">
 
                         <TextView
-                            android:id="@+id/tvSurahName"
+                            android:id="@+id/tvParaName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/ubuntu"
                             android:letterSpacing=".06"
-                            android:text="Al-Fatihah"
+                            android:text="Alif Laam Meen"
                             android:gravity="center"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_25ssp"
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/tvSurahArabicName"
+                            android:id="@+id/tvParaArabicName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_15ssp"
-                            android:fontFamily="@font/suranamefont"
+                            android:fontFamily="@font/noorehuda"
                             android:text="1"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_30ssp"
                             android:textStyle="bold" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="2dp"
-                            android:layout_marginLeft="@dimen/_20ssp"
-                            android:layout_marginTop="@dimen/_10ssp"
-                            android:layout_marginRight="@dimen/_20ssp"
-                            android:background="@android:drawable/divider_horizontal_dark"
-                            android:backgroundTint="@color/white" />
 
                         <TextView
                             android:id="@+id/title"
@@ -102,27 +87,20 @@
                             android:fontFamily="@font/suranamefont" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
-            </LinearLayout>
 
-            <!-- Toolbar positioned inside CollapsingToolbarLayout -->
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:menu="@menu/menu_surah"
-                app:titleTextColor="@color/green"
-                app:titleCentered="true"/>
+            </LinearLayout>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- RecyclerView for Ayats -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/ayatRV"
+        android:id="@+id/ayatParaRV"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/_4ssp"
-        android:layout_marginBottom="@dimen/_4ssp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:listitem="@layout/item_ayat"/>
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/item_ayat"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+
+

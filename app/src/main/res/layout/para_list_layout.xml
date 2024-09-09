@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    app:cardCornerRadius="@dimen/_5sdp"
     android:layout_margin="@dimen/_1sdp">
 
     <LinearLayout
@@ -10,7 +11,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="@dimen/_10sdp">
+        android:padding="@dimen/_5sdp">
 
 
 
@@ -20,10 +21,10 @@
             android:layout_height="@dimen/_50sdp"
             android:layout_marginEnd="@dimen/_5sdp"
             android:background="@mipmap/islamic_star_foreground"
-            android:backgroundTint="#588B76"
+            android:backgroundTint="@color/teal_700"
             android:gravity="center"
             android:text="1"
-            android:textColor="@color/black"
+            android:textColor="@color/teal_700"
             android:textSize="@dimen/_10ssp"
             android:textStyle="bold" />
 
@@ -40,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:text="Alif Laam Meem"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/primaryTextColor"
+                android:textColor="@color/teal_700"
                 android:textStyle="bold" />
 
             <TextView
@@ -57,9 +58,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/noorehuda"
+            android:textSize="@dimen/_20sdp"
             android:text="الفاتحة"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/green"
+            android:textColor="@color/teal_700"
             android:textStyle="bold" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

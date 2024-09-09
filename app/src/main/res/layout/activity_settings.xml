@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="#F5F5F5">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,47 +17,225 @@
             android:id="@+id/viewSettings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="#EEFDFCFC"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="4dp"
+            android:backgroundTint="#FFFFFF"
+            app:cardCornerRadius="@dimen/_6sdp"
+            android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Preview Settings"
+                android:textStyle="bold"
+                android:textColor="@color/teal_700"
+                android:textSize="18sp"
+                android:paddingBottom="8dp" />
+
+            <!-- Arabic Switch -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/_5sdp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Arabic"
+                    android:textSize="16sp"
+                    android:layout_weight="1" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switchArabic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <!-- Translation Switch -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/_5sdp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="English Translation"
+                    android:textSize="16sp"
+                    android:layout_weight="1" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switchEnglishTranslation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/_4sdp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Urdu Translation"
+                    android:textSize="16sp"
+                    android:layout_weight="1" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switchUrduTranslation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Font Settings Section -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/fontSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FFFFFF"
+        app:cardCornerRadius="@dimen/_6sdp"
+        android:layout_marginBottom="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Font Settings"
+            android:textStyle="bold"
+            android:textColor="@color/teal_700"
+            android:textSize="18sp"
+            android:paddingBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#EAE8E8"
+            android:layout_marginBottom="@dimen/_10sdp">
+
+            <TextView
+                android:id="@+id/arabicPreviewFontSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="بِسۡمِ اللّٰہِ الرَّحۡمٰنِ الرَّحِیۡمِ"
+                android:textSize="@dimen/_12sdp"
+                android:fontFamily="@font/noorehuda"
+                android:textColor="@color/green"
+                android:layout_gravity="center"
+                android:paddingTop="12dp"
+                android:paddingBottom="16dp" />
+
+            <TextView
+                android:id="@+id/previewEnglishTranslationFontSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="In the Name of Allah, the Most Beneficent, the Most Merciful"
+                android:textSize="@dimen/_12sdp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/ubuntu"
+                android:layout_gravity="center"
+                android:padding="16dp"
+                android:paddingBottom="@dimen/_2sdp" />
+
+            <TextView
+                android:id="@+id/previewTranslationFontSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="شروع اللہ کا نام لے کر جو بڑا مہربان نہایت رحم والا ہے۔"
+                android:textSize="@dimen/_12sdp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/jameelnoorinastaleeq"
+                android:layout_gravity="center"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp" />
+
+        </LinearLayout>
+
+        <!-- Arabic Font Size Slider -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Arabic Font Size"
+            android:textSize="16sp" />
+
+        <SeekBar
+            android:id="@+id/seekBarArabicFontSize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="30"
+            android:progress="16" />
+
+        <!-- Translation and Tafseer Font Size Slider -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Urdu Translation Font Size"
+            android:textSize="16sp"
+            android:paddingTop="16dp" />
+
+        <SeekBar
+            android:id="@+id/seekBarTranslationFontSize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="30"
+            android:progress="16" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="English Translation Font Size"
+            android:textSize="16sp"
+            android:paddingTop="16dp" />
+
+        <SeekBar
+            android:id="@+id/seekBarEnglishTranslationFontSize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="30"
+            android:progress="16" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/translationSelection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#FFFFFF"
+            app:cardCornerRadius="@dimen/_6sdp"
             android:layout_marginBottom="16dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="@dimen/_10sdp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Preview Settings"
+                    android:text="Select Translations"
                     android:textStyle="bold"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/teal_700"
                     android:textSize="18sp"
-                    android:paddingBottom="8dp" />
+                    android:paddingBottom="@dimen/_8sdp" />
 
-                <!-- Arabic Switch -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingBottom="16dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="Arabic"
-                        android:textSize="16sp"
-                        android:layout_weight="1" />
-
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/switchArabic"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-
-                <!-- Translation Switch -->
+                <!-- English Translation Select -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -70,17 +249,19 @@
                         android:textSize="16sp"
                         android:layout_weight="1" />
 
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/switchEnglishTranslation"
+                    <Spinner
+                        android:id="@+id/spinnerEnglishTranslation"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:entries="@array/english_translations" />
                 </LinearLayout>
 
+                <!-- Urdu Translation Select -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingBottom="16dp">
+                    android:paddingBottom="@dimen/_5sdp">
 
                     <TextView
                         android:layout_width="0dp"
@@ -89,145 +270,24 @@
                         android:textSize="16sp"
                         android:layout_weight="1" />
 
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/switchUrduTranslation"
+                    <Spinner
+                        android:id="@+id/spinnerUrduTranslation"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:entries="@array/urdu_translations" />
                 </LinearLayout>
-
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Font Settings Section -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/fontSettings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#EEFDFCFC"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="4dp"
-            android:layout_marginBottom="16dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Font Setting"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="18sp"
-                    android:paddingBottom="8dp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:background="#EAE8E8"
-                    android:layout_marginBottom="@dimen/_10sdp">
-
-                    <TextView
-                        android:id="@+id/arabicPreviewFontSize"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="بِسۡمِ اللّٰہِ الرَّحۡمٰنِ الرَّحِیۡمِ"
-                        android:textSize="@dimen/_12sdp"
-                        android:fontFamily="@font/noorehuda"
-                        android:textColor="@color/green"
-                        android:layout_gravity="center"
-                        android:paddingTop="12dp"
-                        android:paddingBottom="16dp" />
-
-                    <TextView
-                        android:id="@+id/previewEnglishTranslationFontSize"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="In the Name of Allah, the Most Beneficent, the Most Merciful"
-                        android:textSize="@dimen/_12sdp"
-                        android:textColor="@color/black"
-                        android:fontFamily="@font/ubuntu"
-                        android:layout_gravity="center"
-                        android:padding="16dp"
-                        android:paddingBottom="@dimen/_2sdp" />
-
-                    <TextView
-                        android:id="@+id/previewTranslationFontSize"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="شروع اللہ کا نام لے کر جو بڑا مہربان نہایت رحم والا ہے۔"
-                        android:textSize="@dimen/_12sdp"
-                        android:textColor="@color/black"
-                        android:fontFamily="@font/jameelnoorinastaleeq"
-                        android:layout_gravity="center"
-                        android:paddingTop="16dp"
-                        android:paddingBottom="16dp" />
-
-
-
-                </LinearLayout>
-
-                <!-- Arabic Font Preview -->
-
-
-                <!-- Arabic Font Size Slider -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Arabic Font Size"
-                    android:textSize="16sp" />
-
-                <SeekBar
-                    android:id="@+id/seekBarArabicFontSize"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:max="30"
-                    android:progress="16" />
-
-
-                <!-- Translation and Tafseer Font Size Slider -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Urdu Translation Font Size"
-                    android:textSize="16sp"
-                    android:paddingTop="16dp" />
-
-                <SeekBar
-                    android:id="@+id/seekBarTranslationFontSize"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:max="30"
-                    android:progress="16" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="English Translation Font Size"
-                    android:textSize="16sp"
-                    android:paddingTop="16dp" />
-
-                <SeekBar
-                    android:id="@+id/seekBarEnglishTranslationFontSize"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:max="30"
-                    android:progress="16" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Set Default Button -->
+    <!-- Set Default Button -->
         <Button
-            android:id="@+id/buttonSetDefault"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Set Default"
-            android:backgroundTint="@color/colorPrimary"
-            android:textColor="@android:color/white"
-            android:layout_marginTop="16dp" />
+        android:id="@+id/buttonSetDefault"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Set Default"
+        android:backgroundTint="@color/teal_700"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="@dimen/_1sdp" />
     </LinearLayout>
 </ScrollView>

@@ -64,7 +64,7 @@
 
     <fragment
         android:id="@+id/navigation_favourite"
-        android:name="com.example.quran.ui.favourites.FavouritesFragment"
+        android:name="com.example.quran.ui.FavouritesFragment"
         android:label="@string/title_favourite"
         tools:layout="@layout/fragment_favourites" />
 

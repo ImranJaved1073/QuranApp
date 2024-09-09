@@ -2,8 +2,11 @@ package com.example.quran.dataAccess
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
+import com.example.quran.models.Bookmark
 import com.example.quran.models.Surah
 import com.example.quran.models.Verse
 
@@ -34,6 +37,11 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         private const val COLUMN_PARA_ID = "para_id"
         private const val COLUMN_P_AYA_ID = "p_aya_id"
         private const val COLUMN_TOTAL_RUKU = "total_ruku"
+
+        private const val TABLE_BOOKMARKS = "Bookmarks"
+        private const val COLUMN_AYAT_ID = "aya_id"
+        private const val COLUMN_BOOKMARK_SURA_ID = "sura_id"
+        private const val COLUMN_BOOKMARK_AYA_NO = "aya_no"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -60,13 +68,20 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
                 "$COLUMN_P_AYA_ID INTEGER," +
                 "$COLUMN_TOTAL_RUKU INTEGER)")
 
+        val createBookmarksTable = ("CREATE TABLE $TABLE_BOOKMARKS (" +
+                "$COLUMN_AYAT_ID INTEGER PRIMARY KEY," +
+                "$COLUMN_BOOKMARK_SURA_ID INTEGER," +
+                "$COLUMN_BOOKMARK_AYA_NO INTEGER)")
+
         db?.execSQL(createSurahTable)
         db?.execSQL(createVerseTable)
+        db?.execSQL(createBookmarksTable)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db?.execSQL("DROP TABLE IF EXISTS $TABLE_SURAH")
         db?.execSQL("DROP TABLE IF EXISTS $TABLE_VERSE")
+        db?.execSQL("DROP TABLE IF EXISTS $TABLE_BOOKMARKS")
         onCreate(db)
     }
 
@@ -116,11 +131,30 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
                     revelationType
                 )
             )
-            surahs.sortBy { it.number }
+            //surahs.sortBy { it.number }
         }
         cursor.close()
         db.close()
         return surahs
+    }
+
+    fun getSurah(surahNumber: Int) : Surah? {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM $TABLE_SURAH WHERE $COLUMN_NUMBER = ?", arrayOf(surahNumber.toString()))
+
+        val surah = if (cursor.moveToFirst()) {
+            val arabicName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ARABIC_NAME))
+            val englishName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ENGLISH_NAME))
+            val verses = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_VERSES))
+            val englishNameTranslation = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ENGLISH_NAME_TRANSLATION))
+            val revelationType = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_REVELATION_TYPE))
+            Surah(surahNumber, arabicName, englishName, englishNameTranslation, verses, revelationType)
+        } else {
+            null
+        }
+        cursor.close()
+        db.close()
+        return surah
     }
 
     fun deleteSurahs() {
@@ -194,5 +228,96 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         val db = writableDatabase
         db.execSQL("DELETE FROM $TABLE_VERSE")
         db.close()
+    }
+
+    // Create: Insert a new bookmark using transactions
+    fun insertBookmark(bookmark: Bookmark) {
+        val db = this.writableDatabase
+        db.beginTransaction()
+        try {
+            val contentValues = ContentValues().apply {
+                put(SQLiteHelper.COLUMN_AYA_ID, bookmark.ayaID)
+                put(SQLiteHelper.COLUMN_BOOKMARK_SURA_ID, bookmark.suraID)
+                put(SQLiteHelper.COLUMN_BOOKMARK_AYA_NO, bookmark.ayaNo)
+            }
+
+            db.insert(SQLiteHelper.TABLE_BOOKMARKS, null, contentValues)
+            db.setTransactionSuccessful()
+        } catch (e: Exception) {
+            Log.e("SQLiteHelper", "Error inserting bookmark", e)
+        } finally {
+            db.endTransaction()
+            db.close()
+        }
+    }
+
+    // Read: Get all bookmarks
+    fun getAllBookmarks(): List<Bookmark> {
+        val bookmarkList = mutableListOf<Bookmark>()
+        val selectQuery = "SELECT * FROM $TABLE_BOOKMARKS"
+        val db = this.readableDatabase
+        val cursor: Cursor? = db.rawQuery(selectQuery, null)
+
+        cursor?.use {
+            if (it.moveToFirst()) {
+                do {
+                    val ayaID = it.getInt(it.getColumnIndexOrThrow(COLUMN_AYA_ID))
+                    val suraID = it.getInt(it.getColumnIndexOrThrow(COLUMN_BOOKMARK_SURA_ID))
+                    val ayaNo = it.getInt(it.getColumnIndexOrThrow(COLUMN_BOOKMARK_AYA_NO))
+
+                    val bookmark = Bookmark(ayaID, suraID, ayaNo)
+                    bookmarkList.add(bookmark)
+                } while (it.moveToNext())
+            }
+        }
+
+        db.close()
+        return bookmarkList
+    }
+
+    // Update: Update an existing bookmark using transactions
+    fun updateBookmark(bookmark: Bookmark): Boolean {
+        val db = this.writableDatabase
+        var success = false
+        db.beginTransaction()
+        try {
+            val contentValues = ContentValues().apply {
+                put(COLUMN_BOOKMARK_AYA_NO, bookmark.ayaNo)
+            }
+
+            val result = db.update(TABLE_BOOKMARKS, contentValues, "${COLUMN_AYAT_ID} = ?", arrayOf(bookmark.ayaID.toString()))
+            if (result > 0) {
+                success = true
+                db.setTransactionSuccessful()
+            }
+        } catch (e: Exception) {
+            Log.e("SQLiteHelper", "Error updating bookmark", e)
+        } finally {
+            db.endTransaction()
+            db.close()
+        }
+        return success
+    }
+
+    // Delete: Delete a bookmark by ID
+    fun deleteBookmark(ayaID: Int): Boolean {
+        val db = this.writableDatabase
+        var success = false
+
+        db.beginTransaction()
+
+        try {
+            val result = db.delete(TABLE_BOOKMARKS, "${COLUMN_AYAT_ID} = ?", arrayOf(ayaID.toString()))
+            if (result > 0) {
+                success = true
+                db.setTransactionSuccessful()
+            }
+        } catch (e: Exception) {
+            Log.e("SQLiteHelper", "Error deleting bookmark", e)
+        } finally {
+            db.endTransaction()
+            db.close()
+        }
+        return success
     }
 }

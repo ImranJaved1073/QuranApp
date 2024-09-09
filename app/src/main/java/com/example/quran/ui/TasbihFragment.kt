@@ -1,5 +1,6 @@
 package com.example.quran.ui
 
+import android.content.Intent
 import android.net.http.HttpException
 import android.os.Build
 import android.os.Bundle
@@ -12,11 +13,9 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresExtension
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.quran.ParaVerseActivity
 import com.example.quran.adapters.ParaAdapter
-import com.example.quran.ParaVerseFragment
-import com.example.quran.R
 import com.example.quran.RetrofitClient
 import com.example.quran.TasbihViewModel
 import com.example.quran.databinding.FragmentTasbihBinding
@@ -49,15 +48,12 @@ class TasbihFragment : Fragment() {
         binding.paraRV.layoutManager = LinearLayoutManager(context)
         adapter = ParaAdapter(emptyList()) { paraNumber ->
             // Create a new instance of VerseFragment
-            val verseFragment = ParaVerseFragment().apply {
-                arguments = Bundle().apply {
-                    putInt("PARA_NUMBER", paraNumber)
-                    putString("PARA_NAME", tasbihViewModel.getParahName(paraNumber))
-                    putString("PARA_ARABIC_NAME", tasbihViewModel.getParahArabicName(paraNumber))
-                }
+            val intent = Intent(requireContext(), ParaVerseActivity::class.java).apply {
+                putExtra("PARA_NUMBER", paraNumber)
+                putExtra("PARA_NAME", tasbihViewModel.getParahName(paraNumber))
+                putExtra("PARA_ARABIC_NAME", tasbihViewModel.getParahArabicName(paraNumber))
             }
-
-            findNavController().navigate(R.id.action_navigation_tasbih_to_navigation_Para_verse, verseFragment.arguments)
+            startActivity(intent)
         }
         binding.paraRV.adapter = adapter
 

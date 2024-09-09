@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -35,13 +36,14 @@ class VerseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_verse) // Use the same layout
+        setSupportActionBar(findViewById(R.id.toolbar))
 
 
         // Ensure home button is enabled
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = ""
 
         // Set the toolbar title to an empty string
-        supportActionBar?.title = ""
 
         sqLiteHelper = SQLiteHelper(this)
 
@@ -52,22 +54,34 @@ class VerseActivity : AppCompatActivity() {
         val arabicFontSize = preferences.getInt("arabic_font_size", 22)
         val translationFontSize = preferences.getInt("translation_font_size", 22)
         val englishTranslationFontSize = preferences.getInt("english_translation_font_size", 18)
+        val urduTranslationSelected = preferences.getInt("urdu_translation_selected", 0)
+        val englishTranslationSelected = preferences.getInt("english_translation_selected", 0)
 
         recyclerView = findViewById(R.id.ayatRV)
         recyclerView.layoutManager = LinearLayoutManager(this)
+
 
         // Retrieve extras from the Intent
         val surahNumber = intent.getIntExtra("SURAH_NUMBER", 1)
         val surahName = intent.getStringExtra("SURAH_NAME")
         val surahArabicName = intent.getStringExtra("SURAH_ARABIC_NAME")
         val ayahNumberToScroll = intent.getIntExtra("AYAH_NUMBER", -1)
+        val revelationType = intent.getStringExtra("REVELAION_TYPE")
+
 
         // Update the UI with Surah details
         findViewById<TextView>(R.id.tvSurahArabicName).text = surahNumber.toString()
         findViewById<TextView>(R.id.tvSurahName).text = surahName
+        findViewById<ImageView>(R.id.backgroundImageView).setImageResource(if (revelationType == "Meccan") R.drawable.ic_makkah else R.drawable.ic_madinah)
+
 
         // Fetch Ayats
-        fetchAyats(surahNumber, ayahNumberToScroll, isArabicEnabled, isTranslationEnabled, arabicFontSize, translationFontSize, isEnglishTranslationEnabled,englishTranslationFontSize)
+        fetchAyats(surahNumber, ayahNumberToScroll, isArabicEnabled, isTranslationEnabled, arabicFontSize, translationFontSize, isEnglishTranslationEnabled,englishTranslationFontSize, urduTranslationSelected , englishTranslationSelected)
+    }
+
+    private fun showBottomSheet(verse: Verse) {
+        val bottomSheet = VerseBottomSheetFragment(verse)
+        bottomSheet.show(supportFragmentManager, VerseBottomSheetFragment.TAG)
     }
 
     private fun fetchAyats(
@@ -78,7 +92,9 @@ class VerseActivity : AppCompatActivity() {
         arabicFontSize: Int,
         translationFontSize: Int,
         isEnglishTranslationEnabled: Boolean,
-        englishTranslationFontSize: Int
+        englishTranslationFontSize: Int,
+        urduTranslationSelected: Int,
+        englishTranslationSelected: Int
     ) {
         if (isOnline()) {
             GlobalScope.launch(Dispatchers.IO) {
@@ -100,8 +116,12 @@ class VerseActivity : AppCompatActivity() {
                             arabicFontSize,
                             translationFontSize,
                             isEnglishTranslationEnabled,
-                            englishTranslationFontSize
-                        )
+                            englishTranslationFontSize,
+                            urduTranslationSelected,
+                            englishTranslationSelected
+                        ){ verse ->
+                            showBottomSheet(verse)
+                        }
 
                         recyclerView.adapter = verseAdapter
 
@@ -134,8 +154,12 @@ class VerseActivity : AppCompatActivity() {
                         arabicFontSize,
                         translationFontSize,
                         isEnglishTranslationEnabled,
-                        englishTranslationFontSize
-                    )
+                        englishTranslationFontSize,
+                        urduTranslationSelected,
+                        englishTranslationSelected
+                    ) { verse ->
+                        showBottomSheet(verse)
+                    }
                     recyclerView.adapter = verseAdapter
                     if (ayahNumberToScroll != -1) {
                         recyclerView.scrollToPosition(
@@ -155,13 +179,17 @@ class VerseActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_surah, menu)
+        val searchItem = menu?.findItem(R.id.action_search)
+        //searchItem?.icon?.setTint(getColor(R.color.white))
+        val settingItem = menu?.findItem(R.id.action_settings)
+        settingItem?.icon?.setTint(getColor(R.color.black))
 
         // Handle menu item clicks
-        menu?.findItem(R.id.action_search)?.setOnMenuItemClickListener {
+        searchItem?.setOnMenuItemClickListener {
             showSearchOptionsDialog()
             true
         }
-        menu?.findItem(R.id.action_settings)?.setOnMenuItemClickListener {
+        settingItem?.setOnMenuItemClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
             true
         }

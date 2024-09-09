@@ -53,6 +53,7 @@ class HomeFragment : Fragment() {
                 putExtra("SURAH_NUMBER", surahNumber)
                 putExtra("SURAH_NAME", homeViewModel.getSurahName(surahNumber))
                 putExtra("SURAH_ARABIC_NAME", homeViewModel.getSurahArabicName(surahNumber))
+                putExtra("REVELAION_TYPE", homeViewModel.getSurahRevelationType(surahNumber))
             }
             startActivity(intent)
         }

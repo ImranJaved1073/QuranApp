@@ -5,18 +5,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:background="@color/white"
-    android:layout_marginTop="@dimen/_1sdp">
+    android:background="#3BD3D3D3">
 
     <!-- Ayah Card View -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="#EEFDFCFC"
-        app:cardCornerRadius="@dimen/_2sdp"
-        app:cardElevation="@dimen/_1sdp"
-        android:layout_margin="@dimen/_2sdp"
-        app:strokeWidth="2dp">
+        android:layout_marginTop="@dimen/_2sdp"
+        android:layout_marginEnd="@dimen/_4sdp"
+        android:layout_marginStart="@dimen/_4sdp"
+        android:elevation="3dp"
+        app:cardCornerRadius="8dp"
+        app:cardUseCompatPadding="true"
+        app:cardPreventCornerOverlap="false"
+        app:strokeWidth="@dimen/_1sdp">
 
         <!-- Enclose Ayah Content -->
         <LinearLayout
@@ -38,8 +40,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="113:113"
+                    android:background="@color/light_gray_transparent"
                     android:fontFamily="@font/ubuntu"
-                    android:textColor="@color/black"
+                    android:textColor="@android:color/holo_blue_dark"
                     android:textSize="@dimen/_8ssp"
                     android:textStyle="bold"
                     android:layout_gravity="center"
@@ -71,7 +74,6 @@
                 android:letterSpacing="0.05"
                 android:lineSpacingExtra="@dimen/_4sdp"
                 android:text="بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ"
-                android:textAlignment="center"
                 android:textColor="@color/blue"
                 android:textSize="@dimen/_17ssp"
                 tools:ignore="RtlCompat" />
@@ -79,10 +81,25 @@
             <!-- Divider -->
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_height="2dp"
+                android:layout_marginTop="@dimen/_3sdp"
                 android:background="@android:drawable/divider_horizontal_dark"
                 android:backgroundTint="@color/black" />
+
+            <TextView
+                android:id="@+id/ayatDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="@dimen/_8sdp"
+                android:fontFamily="@font/al_qalam"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:layout_marginBottom="@dimen/_8sdp"
+                android:textColor="@color/black"
+                android:text="سورة آل عىران ٣ آیت نمبرا پماره ٣ يمارة ركوع٩ سورة ركوع١"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                tools:ignore="RtlCompat"/>
 
             <!-- English Translation -->
             <TextView
@@ -104,17 +121,14 @@
                 android:id="@+id/ayahUrduTranslation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/jameelnoorinastaleeq"
-                android:gravity="center"
                 android:letterSpacing="0.03"
                 android:lineSpacingExtra="8dp"
                 android:text="شروع الله کا نام لے کر جو بڑا مہربان نہایت رحم والا ہے"
-                android:textAlignment="center"
+                android:layout_gravity="end"
                 android:textColor="@color/green"
-                android:textSize="@dimen/_11sdp"
-                tools:ignore="RtlCompat" />
+                android:textSize="@dimen/_11sdp" />
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

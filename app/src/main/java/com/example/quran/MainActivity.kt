@@ -49,6 +49,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_toolbar, menu)
+        val settingItem = menu?.findItem(R.id.action_settings)
+        settingItem?.icon?.setTint(getColor(R.color.white))
         return true
     }
 

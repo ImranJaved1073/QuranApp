@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:layout_marginTop="@dimen/_4sdp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
@@ -19,7 +20,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/card_gradient"
+            android:background="@color/light_gray_transparent"
             android:gravity="center"
             android:paddingTop="5dp"
             android:paddingBottom="5dp">
@@ -31,7 +32,7 @@
                 android:text="122126123"
                 android:gravity="center"
                 android:textSize="@dimen/_50ssp"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:fontFamily="@font/suranamefont"
                 app:tint="@color/white" />
         </RelativeLayout>

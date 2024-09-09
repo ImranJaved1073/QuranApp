@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/_4sdp"
     android:background="@color/background"
     android:orientation="vertical"
     android:paddingRight="@dimen/_7sdp"
@@ -19,7 +20,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/card_gradient"
+            android:background="@color/light_gray_transparent"
             android:gravity="center"
             android:paddingTop="5dp"
             android:paddingBottom="5dp">
@@ -27,12 +28,14 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/_5sdp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:text="122126123"
                 android:gravity="center"
                 android:textSize="@dimen/_50ssp"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:fontFamily="@font/suranamefont"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="@dimen/_2ssp"
                 app:tint="@color/white" />
         </RelativeLayout>
     </com.google.android.material.card.MaterialCardView>

@@ -18,12 +18,16 @@
         android:theme="@style/Theme.Quran"
         tools:targetApi="31">
         <activity
+            android:name=".ParaVerseActivity"
+            android:exported="false" />
+        <activity
             android:name=".TafseerQuranActivity"
             android:exported="false"
-            android:label="Tafseer Quran"/>
+            android:label="Tafseer Quran" />
         <activity
             android:name=".VerseActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.QuranApp.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:exported="false" /> <!-- MainActivity declaration -->

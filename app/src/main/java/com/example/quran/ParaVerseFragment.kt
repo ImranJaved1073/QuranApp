@@ -39,6 +39,9 @@ class ParaVerseFragment : Fragment() {
         val isEnglishTranslationEnabled = preferences.getBoolean("english_translation_enabled", true)
         val englishTranslationFontSize = preferences.getInt("english_translation_font_size", 18)
 
+        val urduTranslationSelected = preferences.getInt("urdu_translation_selected", 0)
+        val englishTranslationSelected = preferences.getInt("english_translation_selected", 0)
+
         recyclerView = view.findViewById(R.id.ayatParaRV)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
@@ -53,15 +56,21 @@ class ParaVerseFragment : Fragment() {
 
         // Fetch Ayats and setup SearchView
         setupSearchView(view)
-        fetchAyats(paraNumber, ayahNumberToScroll,isArabicEnabled, isTranslationEnabled, arabicFontSize, translationFontSize, isEnglishTranslationEnabled,englishTranslationFontSize)
+        fetchAyats(paraNumber, ayahNumberToScroll,isArabicEnabled, isTranslationEnabled, arabicFontSize, translationFontSize, isEnglishTranslationEnabled,englishTranslationFontSize,urduTranslationSelected, englishTranslationSelected)
 
         return view
+    }
+
+    private fun showBottomSheet(verse: Verse) {
+        val bottomSheet = VerseBottomSheetFragment(verse)
+        bottomSheet.show(requireActivity().supportFragmentManager, VerseBottomSheetFragment.TAG)
     }
 
     private fun fetchAyats(paraNumber: Int, ayahNumberToScroll: Int,isArabicEnabled: Boolean,
                            isTranslationEnabled: Boolean,
                            arabicFontSize: Int,
-                           translationFontSize: Int, isEnglishTranslationEnabled: Boolean, englishTranslationFontSize: Int) {
+                           translationFontSize: Int, isEnglishTranslationEnabled: Boolean, englishTranslationFontSize: Int,
+                           urduTranslationSelected: Int, englishTranslationSelected: Int) {
         GlobalScope.launch {
             try {
                 // Fetch Ayats using Retrofit with coroutines
@@ -75,7 +84,10 @@ class ParaVerseFragment : Fragment() {
                     verseAdapter = VerseAdapter(ayatsList,isArabicEnabled,
                         isTranslationEnabled,
                         arabicFontSize,
-                        translationFontSize, isEnglishTranslationEnabled, englishTranslationFontSize)
+                        translationFontSize, isEnglishTranslationEnabled, englishTranslationFontSize,
+                        urduTranslationSelected, englishTranslationSelected){ verse ->
+                        showBottomSheet(verse)
+                    }
                     recyclerView.adapter = verseAdapter
 
                     // Scroll to the specified Ayah if provided

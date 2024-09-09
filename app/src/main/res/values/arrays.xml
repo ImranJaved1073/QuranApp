@@ -1,0 +1,22 @@
+<resources>
+    <!-- Reply Preference -->
+    <string-array name="reply_entries">
+        <item>Reply</item>
+        <item>Reply to all</item>
+    </string-array>
+
+    <string-array name="reply_values">
+        <item>reply</item>
+        <item>reply_all</item>
+    </string-array>
+
+    <string-array name="english_translations">
+        <item>Mufti Taqi Usmani</item>
+        <item>Dr. Mohsin Khan</item>
+    </string-array>
+
+    <string-array name="urdu_translations">
+        <item>Fateh Muhammad Jalandhri</item>
+        <item>Mehmood UL Hassan</item>
+    </string-array>
+</resources>

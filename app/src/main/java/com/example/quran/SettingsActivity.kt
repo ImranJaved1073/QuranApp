@@ -3,8 +3,11 @@ package com.example.quran
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
 import android.widget.Button
 import android.widget.SeekBar
+import android.widget.Spinner
 import android.widget.Switch
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +28,8 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var arabicPreviewTextView: TextView
     private lateinit var translationPreviewTextView: TextView
     private lateinit var englishTranslationPreviewTextView: TextView
+    private lateinit var spinnerEnglishTranslation: Spinner
+    private lateinit var spinnerUrduTranslation: Spinner
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +54,9 @@ class SettingsActivity : AppCompatActivity() {
         translationPreviewTextView = findViewById(R.id.previewTranslationFontSize)
         englishTranslationPreviewTextView = findViewById(R.id.previewEnglishTranslationFontSize)
 
+        spinnerEnglishTranslation = findViewById(R.id.spinnerEnglishTranslation)
+        spinnerUrduTranslation = findViewById(R.id.spinnerUrduTranslation)
+
         // Set SeekBar limits for font sizes
         seekBarArabicFontSize.max = 20 // Arabic font range: 14sp to 30sp
         seekBarTranslationFontSize.max = 20 // Translation font range: 14sp to 30sp
@@ -72,6 +80,22 @@ class SettingsActivity : AppCompatActivity() {
 
         switchEnglishTranslation.setOnCheckedChangeListener { _, isChecked ->
             preferences.edit().putBoolean("english_translation_enabled", isChecked).apply()
+        }
+
+        spinnerEnglishTranslation.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                preferences.edit().putInt("english_translation_selected", position).apply()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        spinnerUrduTranslation.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                preferences.edit().putInt("urdu_translation_selected", position).apply()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
 
@@ -126,6 +150,9 @@ class SettingsActivity : AppCompatActivity() {
         val englishTranslationFontSize = preferences.getInt("english_translation_font_size", 18)
         seekBarEnglishTranslationFontSize.progress = englishTranslationFontSize - 16
         englishTranslationPreviewTextView.textSize = englishTranslationFontSize.toFloat() // Set initial preview font size
+
+        spinnerEnglishTranslation.setSelection(preferences.getInt("english_translation_selected", 0))
+        spinnerUrduTranslation.setSelection(preferences.getInt("urdu_translation_selected", 0))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -16,10 +16,14 @@ class HomeViewModel : ViewModel() {
     }
 
     fun getSurahName(surahNumber: Int): String {
-        return _surahs.value?.get(surahNumber - 1)?.englishName ?: ""
+        return _surahs.value?.get(surahNumber - 1)?.englishNameTranslation ?: ""
     }
 
     fun getSurahArabicName(surahNumber: Int): String {
         return _surahs.value?.get(surahNumber - 1)?.name ?: ""
+    }
+
+    fun getSurahRevelationType(surahNumber: Int): String {
+        return _surahs.value?.get(surahNumber - 1)?.revelationType ?: ""
     }
 }
