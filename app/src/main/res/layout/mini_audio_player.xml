@@ -1,0 +1,68 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:padding="8dp">
+
+
+
+    <!-- LinearLayout for SeekBar and Time -->
+    <LinearLayout
+        android:id="@+id/seekBarContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
+
+        <ImageButton
+            android:id="@+id/btnPlayPause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_pause_circle_24"
+            android:layout_marginEnd="@dimen/_2sdp"
+            android:contentDescription="@string/play_pause"
+            app:tint="@color/teal_700"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+
+        <!-- Current Time Text -->
+        <TextView
+            android:id="@+id/tvCurrentTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            android:layout_gravity="center"
+            android:layout_marginEnd="8dp" />
+
+        <!-- SeekBar for Audio Progress -->
+        <SeekBar
+            android:id="@+id/audioSeekBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:thumbTint="@color/green" />
+
+        <!-- Total Duration Text -->
+        <TextView
+            android:id="@+id/tvTotalTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp" />
+
+        <ImageButton
+            android:id="@+id/btnClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_2sdp"
+            android:src="@drawable/baseline_close_24"
+            android:contentDescription="@string/close"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+
+    </LinearLayout>
+
+</RelativeLayout>
