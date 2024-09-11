@@ -34,20 +34,25 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical">
 
-                <!-- Ayah Number Label -->
-                <TextView
-                    android:id="@+id/ayahNumberLabel"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/playButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="113:113"
-                    android:background="@color/light_gray_transparent"
-                    android:fontFamily="@font/ubuntu"
-                    android:textColor="@android:color/holo_blue_dark"
-                    android:textSize="@dimen/_8ssp"
-                    android:textStyle="bold"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="@dimen/_8sdp"
-                    android:gravity="center_vertical"/>
+                    app:icon="@drawable/ic_play_arrow"
+                    app:iconSize="@dimen/_17sdp"
+                    app:iconTint="@color/teal_700"
+                    style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                    android:background="?attr/selectableItemBackgroundBorderless"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/isBookMarked"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:icon="@drawable/baseline_bookmark_24"
+                    app:iconTint="@color/teal_700"
+                    style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                    android:background="?attr/selectableItemBackgroundBorderless"/>
+
 
                 <!-- Space for overflow menu -->
                 <Space
@@ -55,13 +60,20 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"/>
 
-                <!-- Overflow Menu Button -->
-                <ImageView
-                    android:id="@+id/overflowMenuButton"
-                    android:layout_width="@dimen/_20sdp"
-                    android:layout_height="@dimen/_20sdp"
-                    android:src="@drawable/ic_overflow_menu"
-                    android:layout_gravity="end"/>
+                <!-- Ayah Number Label -->
+                <TextView
+                    android:id="@+id/ayahNumberLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3:113"
+                    android:background="@color/light_gray_transparent"
+                    android:fontFamily="@font/ubuntu"
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:textSize="@dimen/_12ssp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    android:gravity="center_vertical"/>
             </LinearLayout>
 
             <!-- Ayah Arabic Text -->

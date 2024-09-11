@@ -4,6 +4,7 @@ import com.example.quran.models.Para
 import com.example.quran.models.Surah
 import com.example.quran.models.Verse
 import com.example.quran.responses.ParaResponse
+import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -26,15 +27,17 @@ interface QuranApi {
     @GET("Ayat/{ayaID}")
     suspend fun getAyat(@Path("ayaID") ayaNumber: Int): Verse
 
-
+    @GET("{suraID}{ayaID}.mp3")
+    suspend fun getAyatAudio(
+        @Path("suraID") suraID: String,
+        @Path("ayaID") ayaID: String
+    ): String
 
 }
 
-
-
-interface UmmAlQuraApi {
-    @GET("date")
-    suspend fun getIslamicDate(@Query("date") date: String): IslamicDateResponse
+interface AladhanApi {
+    @GET("v1/gToH")
+    fun getHijriDate(@Query("date") date: String): Call<HijriDateResponse>
 }
 
 object RetrofitClient {
@@ -50,14 +53,14 @@ object RetrofitClient {
 
 }
 
-object UmmAlQuraRetrofitClient {
-    private const val BASE_URL = "https://api.aladhan.com/v1/"
+object RetrofitInstance {
+    private const val BASE_URL = "https://api.aladhan.com/"
 
-    val api: UmmAlQuraApi by lazy {
+    val api: AladhanApi by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(UmmAlQuraApi::class.java)
+            .create(AladhanApi::class.java)
     }
 }

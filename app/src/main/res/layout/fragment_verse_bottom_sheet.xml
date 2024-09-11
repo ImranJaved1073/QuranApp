@@ -14,29 +14,6 @@
         android:gravity="center"
         android:layout_marginBottom="24dp">
 
-        <!-- Play Button -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_marginEnd="16dp">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/playButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:icon="@drawable/baseline_play_arrow_24"
-                app:iconTint="@color/teal_700"
-                style="@style/Widget.App.Button.OutlinedButton.IconOnly" />
-
-            <!-- Play Button Text -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Play"
-                android:textColor="@color/teal_700" />
-        </LinearLayout>
 
         <!-- Bookmark Button -->
         <LinearLayout

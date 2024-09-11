@@ -2,29 +2,29 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_surah_list"
+        android:icon="@drawable/ic_pdfquran"
+        android:title="Surahs" />
+
+    <item
+        android:id="@+id/navigation_tasbih"
+        android:icon="@drawable/baseline_menu_book_24"
+        android:title="@string/title_juz" />
+
+    <item
+        android:id="@+id/navigation_calendar"
         android:icon="@drawable/ic_home"
         android:title="@string/title_home" />
 
     <item
-        android:id="@+id/navigation_tasbih"
-        android:icon="@drawable/ic_tasbih"
-        android:title="@string/title_tasbih" />
-
-    <item
         android:id="@+id/navigation_prayerclock"
-        android:icon="@drawable/ic_prayerclock"
-        android:title="@string/title_prayertime" />
+        android:icon="@drawable/baseline_menu_book_24"
+        android:title="Tajweed Quran" />
 
     <item
-        android:id="@+id/navigation_calendar"
-        android:icon="@drawable/ic_calendar"
-        android:title="@string/title_calendar" />
-
-    <item
-        android:id="@+id/navigation_favourite"
-        android:icon="@drawable/ic_favourite"
-        android:title="@string/title_favourite" />
+        android:id="@+id/navigation_bookmark"
+        android:icon="@drawable/baseline_bookmark_border_24"
+        android:title="@string/title_bookmark" />
 
 </menu>
 

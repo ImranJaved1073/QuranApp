@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.quran.models.Surah
 
-class HomeViewModel : ViewModel() {
+class SurahListViewModel : ViewModel() {
 
     private val _surahs = MutableLiveData<List<Surah>>()
     val surahs: LiveData<List<Surah>> = _surahs

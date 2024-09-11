@@ -6,10 +6,10 @@
     <string name="title_qibla">Qibla</string>
     <string name="title_prayertime">PrayerTime</string>
     <string name="title_calendar">Calendar</string>
-    <string name="title_favourite">Favourites</string>
+    <string name="title_bookmark">BookMarks</string>
     <string name="loading_qibla">loading Qibla..</string>
     <string name="qibla_direction">Qibla Direction</string>
-    <string name="title_tasbih">Tasbih\n</string>
+    <string name="title_juz">Juz\n</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
@@ -117,4 +117,10 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="delete_button">Delete Button</string>
+    <string name="last_read_ayat">Last Read Ayat</string>
+    <string name="no_bookmark_available">No bookmark available</string>
+    <string name="close">close button</string>
+    <string name="previous">previuos button</string>
+    <string name="play_pause">Play/Pause Button</string>
+    <string name="next">Next Button\n</string>
 </resources>

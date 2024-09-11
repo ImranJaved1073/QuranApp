@@ -6,6 +6,8 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
@@ -18,16 +20,23 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quran.adapters.VerseAdapter
 import com.example.quran.dataAccess.SQLiteHelper
+import com.example.quran.models.Bookmark
 import com.example.quran.models.Verse
+import com.example.quran.ui.MiniPlayerFragment
+import com.example.quran.ui.VerseBottomSheetFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.time.withTimeoutOrNull
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import retrofit2.HttpException
 import java.io.IOException
 
 class VerseActivity : AppCompatActivity() {
 
+    private var count: Int = 0
     private lateinit var recyclerView: RecyclerView
     private lateinit var verseAdapter: VerseAdapter
     private var ayatsList: List<Verse> = emptyList() // Initialize as an empty list
@@ -50,7 +59,8 @@ class VerseActivity : AppCompatActivity() {
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         val isArabicEnabled = preferences.getBoolean("arabic_enabled", true)
         val isTranslationEnabled = preferences.getBoolean("translation_enabled", true)
-        val isEnglishTranslationEnabled = preferences.getBoolean("english_translation_enabled", true)
+        val isEnglishTranslationEnabled =
+            preferences.getBoolean("english_translation_enabled", true)
         val arabicFontSize = preferences.getInt("arabic_font_size", 22)
         val translationFontSize = preferences.getInt("translation_font_size", 22)
         val englishTranslationFontSize = preferences.getInt("english_translation_font_size", 18)
@@ -76,12 +86,35 @@ class VerseActivity : AppCompatActivity() {
 
 
         // Fetch Ayats
-        fetchAyats(surahNumber, ayahNumberToScroll, isArabicEnabled, isTranslationEnabled, arabicFontSize, translationFontSize, isEnglishTranslationEnabled,englishTranslationFontSize, urduTranslationSelected , englishTranslationSelected)
+        fetchAyats(
+            surahNumber,
+            ayahNumberToScroll,
+            isArabicEnabled,
+            isTranslationEnabled,
+            arabicFontSize,
+            translationFontSize,
+            isEnglishTranslationEnabled,
+            englishTranslationFontSize,
+            urduTranslationSelected,
+            englishTranslationSelected
+        )
     }
 
     private fun showBottomSheet(verse: Verse) {
         val bottomSheet = VerseBottomSheetFragment(verse)
         bottomSheet.show(supportFragmentManager, VerseBottomSheetFragment.TAG)
+    }
+
+    private fun playAyat(verse: Verse) {
+        val miniPlayerFragment = MiniPlayerFragment()
+        miniPlayerFragment.playAudio(verse.suraID, verse.ayaNo)
+        miniPlayerFragment.show(supportFragmentManager, "MiniPlayerFragment")
+    }
+
+    private fun updateBookmarkedVerses(verses: List<Verse>, bookmarkedAyats: List<Bookmark>) {
+        verses.forEach { verse ->
+            verse.isBookmarked = bookmarkedAyats.any { it.ayaID == verse.ayaID }
+        }
     }
 
     private fun fetchAyats(
@@ -96,57 +129,31 @@ class VerseActivity : AppCompatActivity() {
         urduTranslationSelected: Int,
         englishTranslationSelected: Int
     ) {
-        if (isOnline()) {
-            GlobalScope.launch(Dispatchers.IO) {
+        GlobalScope.launch(Dispatchers.IO) {
+            // Attempt to fetch data with a timeout
+            val fetchedAyats = withTimeoutOrNull(5000) {
                 try {
-                    val fetchedAyats = RetrofitClient.api.getVerses(surahNumber)
-                    val surah = fetchedAyats.surah
-                    val ayahs = fetchedAyats.ayahs
+                    RetrofitClient.api.getVerses(surahNumber).also { fetchedVerses ->
+                        val surah = fetchedVerses.surah
+                        val ayahs = fetchedVerses.ayahs
 
-                    sqLiteHelper = SQLiteHelper(this@VerseActivity)
-                    sqLiteHelper.insertVerses(ayahs)
-
-                    withContext(Dispatchers.Main) {
-                        ayatsList = ayahs
-
-                        verseAdapter = VerseAdapter(
-                            ayatsList,
-                            isArabicEnabled,
-                            isTranslationEnabled,
-                            arabicFontSize,
-                            translationFontSize,
-                            isEnglishTranslationEnabled,
-                            englishTranslationFontSize,
-                            urduTranslationSelected,
-                            englishTranslationSelected
-                        ){ verse ->
-                            showBottomSheet(verse)
+                        sqLiteHelper = SQLiteHelper(this@VerseActivity)
+                        if (sqLiteHelper.getVerses(surah.number).isEmpty()) {
+                            sqLiteHelper.insertVerses(ayahs)
                         }
+                        updateBookmarkedVerses(ayahs, sqLiteHelper.getAllBookmarks())
 
-                        recyclerView.adapter = verseAdapter
-
-                        if (ayahNumberToScroll != -1) {
-                            recyclerView.scrollToPosition(
-                                ayatsList.indexOfFirst { it.ayaNo == ayahNumberToScroll }
-                            )
-                        }
                     }
                 } catch (e: IOException) {
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(this@VerseActivity, "Network Error: ${e.message}", Toast.LENGTH_SHORT).show()
-                    }
+                    null
                 } catch (e: HttpException) {
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(this@VerseActivity, "API Error: ${e.message}", Toast.LENGTH_SHORT).show()
-                    }
+                    null
                 }
             }
-        }
-        else {
-            try {
-                sqLiteHelper = SQLiteHelper(this)
-                ayatsList = sqLiteHelper.getVerses(surahNumber)
-                if (ayatsList.isNotEmpty()) {
+            withContext(Dispatchers.Main) {
+                if (fetchedAyats != null) {
+                    ayatsList = fetchedAyats.ayahs
+
                     verseAdapter = VerseAdapter(
                         ayatsList,
                         isArabicEnabled,
@@ -156,24 +163,80 @@ class VerseActivity : AppCompatActivity() {
                         isEnglishTranslationEnabled,
                         englishTranslationFontSize,
                         urduTranslationSelected,
-                        englishTranslationSelected
-                    ) { verse ->
-                        showBottomSheet(verse)
-                    }
+                        englishTranslationSelected,
+                        { verse -> showBottomSheet(verse) }, // Bottom sheet click listener
+                        { verse -> playAyat(verse) } // Play button click listener
+                    )
+
                     recyclerView.adapter = verseAdapter
+
                     if (ayahNumberToScroll != -1) {
                         recyclerView.scrollToPosition(
                             ayatsList.indexOfFirst { it.ayaNo == ayahNumberToScroll }
                         )
                     }
                 } else {
-                    Toast.makeText(this, "No data available offline.", Toast.LENGTH_SHORT).show()
+                    fetchFromLocalDatabase(
+                        surahNumber,
+                        ayahNumberToScroll,
+                        isArabicEnabled,
+                        isTranslationEnabled,
+                        arabicFontSize,
+                        translationFontSize,
+                        isEnglishTranslationEnabled,
+                        englishTranslationFontSize,
+                        urduTranslationSelected,
+                        englishTranslationSelected
+                    )
                 }
-            } catch (e: Exception) {
-                // Handle exception when the table does not exist
-                Toast.makeText(this, "Error: Database not initialized.", Toast.LENGTH_SHORT).show()
-            }
 
+            }
+        }
+    }
+
+
+    private fun fetchFromLocalDatabase(
+        surahNumber: Int,
+        ayahNumberToScroll: Int,
+        isArabicEnabled: Boolean,
+        isTranslationEnabled: Boolean,
+        arabicFontSize: Int,
+        translationFontSize: Int,
+        isEnglishTranslationEnabled: Boolean,
+        englishTranslationFontSize: Int,
+        urduTranslationSelected: Int,
+        englishTranslationSelected: Int
+    ) {
+        try {
+            sqLiteHelper = SQLiteHelper(this)
+            ayatsList = sqLiteHelper.getVerses(surahNumber)
+            updateBookmarkedVerses(ayatsList, sqLiteHelper.getAllBookmarks())
+            if (ayatsList.isNotEmpty()) {
+                verseAdapter = VerseAdapter(
+                    ayatsList,
+                    isArabicEnabled,
+                    isTranslationEnabled,
+                    arabicFontSize,
+                    translationFontSize,
+                    isEnglishTranslationEnabled,
+                    englishTranslationFontSize,
+                    urduTranslationSelected,
+                    englishTranslationSelected,
+                    { verse -> showBottomSheet(verse) }, // Bottom sheet click listener
+                    { verse -> playAyat(verse) } // Play button click listener
+                )
+
+                recyclerView.adapter = verseAdapter
+                if (ayahNumberToScroll != -1) {
+                    recyclerView.scrollToPosition(
+                        ayatsList.indexOfFirst { it.ayaNo == ayahNumberToScroll }
+                    )
+                }
+            } else {
+                Toast.makeText(this, "No data available offline.", Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error: Database not initialized.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -181,19 +244,12 @@ class VerseActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_surah, menu)
         val searchItem = menu?.findItem(R.id.action_search)
         //searchItem?.icon?.setTint(getColor(R.color.white))
-        val settingItem = menu?.findItem(R.id.action_settings)
-        settingItem?.icon?.setTint(getColor(R.color.black))
 
         // Handle menu item clicks
         searchItem?.setOnMenuItemClickListener {
             showSearchOptionsDialog()
             true
         }
-        settingItem?.setOnMenuItemClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
-            true
-        }
-
         return true
     }
 
@@ -220,41 +276,88 @@ class VerseActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Find by $searchType")
 
+        if (searchType == "Ruku")
+            count = ayatsList.groupBy { it.rakuID }.size
+        else
+            count= ayatsList.size
+
+
         // Set up the input field
         val input = EditText(this)
-        input.hint = "Enter $searchType Number"
+        input.hint = "1-$count"
         builder.setView(input)
 
+        // Create the "Find" button
         builder.setPositiveButton("Find") { _, _ ->
             val query = input.text.toString()
             searchAyat(query, searchType)
         }
         builder.setNegativeButton("Cancel", null)
-        builder.show()
+        val dialog = builder.create()
+
+        // Set the "Find" button to be initially disabled
+        dialog.setOnShowListener {
+            val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            val negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+            positiveButton.isEnabled = false
+            negativeButton.isEnabled = true
+
+            // Add a TextWatcher to the input field
+            input.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    // Enable the "Find" button if text is not empty
+                    positiveButton.isEnabled = s?.isNotEmpty() == true
+                }
+
+                override fun afterTextChanged(s: Editable?) {}
+            })
+        }
+
+        dialog.show()
     }
+
 
     private fun searchAyat(query: String, searchType: String) {
         if (ayatsList.isNotEmpty()) {
             val index = when (searchType) {
                 "Ruku" -> ayatsList.indexOfFirst { it.rakuID.toString() == query }
-                "Ayah" -> ayatsList.indexOfFirst {
-                    it.ayaNo.toString() == query ||
-                            it.arabicText.contains(query, ignoreCase = true) ||
-                            it.drMohsinKhan.contains(query, ignoreCase = true) ||
-                            it.fatehMuhammadJalandhrield.contains(query, ignoreCase = true)
-                }
+                "Ayah" -> ayatsList.indexOfFirst { it.ayaNo.toString() == query }
                 else -> -1
             }
 
             if (index != -1) {
                 recyclerView.scrollToPosition(index)
             } else {
-                Toast.makeText(this, "No results found", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Invalid Input", Toast.LENGTH_SHORT).show()
             }
         } else {
             Toast.makeText(this, "No data loaded", Toast.LENGTH_SHORT).show()
         }
     }
+
+    private fun saveLastReadAyat(surahNumber: Int, ayahNumber: Int) {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val editor = preferences.edit()
+        editor.putInt("LAST_READ_SURAH_NUMBER", surahNumber)
+        editor.putInt("LAST_READ_AYAH_NUMBER", ayahNumber)
+        editor.apply()
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        // Get the current position of the visible Ayat
+        val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+        val visiblePosition = layoutManager.findFirstVisibleItemPosition()
+
+        if (visiblePosition != RecyclerView.NO_POSITION && ayatsList.isNotEmpty()) {
+            val currentAyat = ayatsList[visiblePosition]
+            saveLastReadAyat(currentAyat.suraID, currentAyat.ayaNo) // Save the Surah and Ayah number
+        }
+    }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {

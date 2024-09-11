@@ -31,12 +31,12 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home,
+                R.id.navigation_surah_list,
                 R.id.navigation_tasbih,
                 //R.id.navigation_qibla,
                 R.id.navigation_prayerclock,
                 R.id.navigation_calendar,
-                R.id.navigation_favourite
+                R.id.navigation_bookmark
             )
         )
 

@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import com.example.quran.models.Bookmark
+import com.example.quran.models.Para
 import com.example.quran.models.Surah
 import com.example.quran.models.Verse
 
@@ -37,6 +38,12 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         private const val COLUMN_PARA_ID = "para_id"
         private const val COLUMN_P_AYA_ID = "p_aya_id"
         private const val COLUMN_TOTAL_RUKU = "total_ruku"
+
+        private const val TABLE_PARA = "Para"
+        private const val COLUMN_PARA_NAME = "para_name"
+        private const val COLUMN_PARA_ENGLISH_NAME = "para_english_name"
+        private const val COLUMN_TOTAL_AYAH = "total_ayah"
+
 
         private const val TABLE_BOOKMARKS = "Bookmarks"
         private const val COLUMN_AYAT_ID = "aya_id"
@@ -73,16 +80,68 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
                 "$COLUMN_BOOKMARK_SURA_ID INTEGER," +
                 "$COLUMN_BOOKMARK_AYA_NO INTEGER)")
 
+        val createParaTable = ("CREATE TABLE $TABLE_PARA (" +
+                "$COLUMN_PARA_ID INTEGER PRIMARY KEY," +
+                "$COLUMN_PARA_NAME TEXT," +
+                "$COLUMN_PARA_ENGLISH_NAME TEXT," +
+                "$COLUMN_TOTAL_AYAH INTEGER)")
+
         db?.execSQL(createSurahTable)
         db?.execSQL(createVerseTable)
         db?.execSQL(createBookmarksTable)
+        db?.execSQL(createParaTable)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db?.execSQL("DROP TABLE IF EXISTS $TABLE_SURAH")
         db?.execSQL("DROP TABLE IF EXISTS $TABLE_VERSE")
         db?.execSQL("DROP TABLE IF EXISTS $TABLE_BOOKMARKS")
+        db?.execSQL("DROP TABLE IF EXISTS $TABLE_PARA")
         onCreate(db)
+    }
+
+    fun insertParas(paras: List<Para>) {
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            for (para in paras) {
+                val contentValues = ContentValues().apply {
+                    put(COLUMN_PARA_ID, para.paraID)
+                    put(COLUMN_PARA_NAME, para.arabicName)
+                    put(COLUMN_PARA_ENGLISH_NAME, para.englishName)
+                    put(COLUMN_TOTAL_AYAH, para.totalAyas)
+                }
+                db.insert(TABLE_PARA, null, contentValues)
+            }
+            db.setTransactionSuccessful()
+        } finally {
+            db.endTransaction()
+            db.close()
+        }
+    }
+
+    fun getParas(): List<Para> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM $TABLE_PARA", null)
+        val paras = mutableListOf<Para>()
+        while (cursor.moveToNext()) {
+            val paraID = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PARA_ID))
+            val arabicName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PARA_NAME))
+            val englishName =
+                cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PARA_ENGLISH_NAME))
+            val totalAyas = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_TOTAL_AYAH))
+            paras.add(Para(paraID, arabicName, englishName, totalAyas))
+            paras.sortBy { it.paraID }
+        }
+        cursor.close()
+        db.close()
+        return paras
+    }
+
+    fun deleteParas() {
+        val db = writableDatabase
+        db.execSQL("DELETE FROM $TABLE_PARA")
+        db.close()
     }
 
     fun insertSurahs(surahs: List<Surah>) {
@@ -131,24 +190,36 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
                     revelationType
                 )
             )
-            //surahs.sortBy { it.number }
+            surahs.sortBy { it.number }
         }
         cursor.close()
         db.close()
         return surahs
     }
 
-    fun getSurah(surahNumber: Int) : Surah? {
+    fun getSurah(surahNumber: Int): Surah? {
         val db = readableDatabase
-        val cursor = db.rawQuery("SELECT * FROM $TABLE_SURAH WHERE $COLUMN_NUMBER = ?", arrayOf(surahNumber.toString()))
+        val cursor = db.rawQuery(
+            "SELECT * FROM $TABLE_SURAH WHERE $COLUMN_NUMBER = ?",
+            arrayOf(surahNumber.toString())
+        )
 
         val surah = if (cursor.moveToFirst()) {
             val arabicName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ARABIC_NAME))
             val englishName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ENGLISH_NAME))
             val verses = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_VERSES))
-            val englishNameTranslation = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ENGLISH_NAME_TRANSLATION))
-            val revelationType = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_REVELATION_TYPE))
-            Surah(surahNumber, arabicName, englishName, englishNameTranslation, verses, revelationType)
+            val englishNameTranslation =
+                cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ENGLISH_NAME_TRANSLATION))
+            val revelationType =
+                cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_REVELATION_TYPE))
+            Surah(
+                surahNumber,
+                arabicName,
+                englishName,
+                englishNameTranslation,
+                verses,
+                revelationType
+            )
         } else {
             null
         }
@@ -222,6 +293,67 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         cursor.close()
         db.close()
         return verses
+    }
+
+    fun getParaVerses(paraNumber: Int): List<Verse> {
+        val db = readableDatabase
+
+        val cursor = db.rawQuery(
+            "SELECT * FROM $TABLE_VERSE WHERE $COLUMN_PARA_ID = ?",
+            arrayOf(paraNumber.toString())
+        )
+        val verses = mutableListOf<Verse>()
+        while (cursor.moveToNext()) {
+            val verse = Verse(
+                cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_AYA_ID)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SURA_ID)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_AYA_NO)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ARABIC_TEXT)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_FATEH_MUHAMMAD_JALANDHRIELD)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_MEHMOODUL_HASSAN)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DR_MOHSIN_KHAN)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_MUFTI_TAQI_USMANI)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_RUKU_ID)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PRUKU_ID)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PARA_ID)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_P_AYA_ID)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_TOTAL_RUKU))
+            )
+            verses.add(verse)
+        }
+        cursor.close()
+        db.close()
+        return verses
+    }
+
+    fun getVerse(ayaID: Int): Verse? {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT * FROM $TABLE_VERSE WHERE $COLUMN_AYA_ID = ?",
+            arrayOf(ayaID.toString())
+        )
+        val verse = if (cursor.moveToFirst()) {
+            Verse(
+                cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_AYA_ID)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SURA_ID)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_AYA_NO)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ARABIC_TEXT)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_FATEH_MUHAMMAD_JALANDHRIELD)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_MEHMOODUL_HASSAN)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DR_MOHSIN_KHAN)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_MUFTI_TAQI_USMANI)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_RUKU_ID)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PRUKU_ID)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PARA_ID)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_P_AYA_ID)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_TOTAL_RUKU))
+            )
+        } else {
+            null
+        }
+        cursor.close()
+        db.close()
+        return verse
     }
 
     fun deleteVerses() {

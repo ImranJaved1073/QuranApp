@@ -3,29 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_calendar">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.example.quran.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" >
-        <action
-            android:id="@+id/action_navigation_home_to_navigation_SurahAyats3"
-            app:destination="@id/navigation_SurahAyats" />
-    </fragment>
+        android:id="@+id/navigation_surah_list"
+        android:name="com.example.quran.ui.home.SurahListFragment"
+        android:label="Quran Chapters"
+        tools:layout="@layout/fragment_surah_list" />
 
-    <fragment
-        android:id="@+id/navigation_SurahAyats"
-        android:name="com.example.quran.VerseFragment"
-        android:label="Quran"
-        tools:layout="@layout/fragment_verse" />
+<!--    <fragment-->
+<!--        android:id="@+id/navigation_SurahAyats"-->
+<!--        android:name="com.example.quran.VerseFragment"-->
+<!--        android:label="Quran"-->
+<!--        tools:layout="@layout/fragment_verse" />-->
 
-    <fragment
-        android:id="@+id/navigation_Para_verse"
-        android:name="com.example.quran.ParaVerseFragment"
-        android:label="Para"
-        tools:layout="@layout/fragment_para_verse" />
+<!--    <fragment-->
+<!--        android:id="@+id/navigation_Para_verse"-->
+<!--        android:name="com.example.quran.ui.ParaVerseFragment"-->
+<!--        android:label="Para"-->
+<!--        tools:layout="@layout/fragment_para_verse" />-->
 
     <fragment
         android:id="@+id/navigation_dashboard"
@@ -42,30 +38,27 @@
     <!-- Add the QiblaFragment here -->
     <fragment
         android:id="@+id/navigation_tasbih"
-        android:name="com.example.quran.ui.TasbihFragment"
-        android:label="@string/title_tasbih"
+        android:name="com.example.quran.ui.tasbih.TasbihFragment"
+        android:label="@string/title_juz"
         tools:layout="@layout/fragment_tasbih" >
-        <action
-            android:id="@+id/action_navigation_tasbih_to_navigation_Para_verse"
-            app:destination="@id/navigation_Para_verse" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_prayerclock"
         android:name="com.example.quran.ui.PrayerTimeFragment"
-        android:label="@string/title_prayertime"
+        android:label="Tajweed Quran"
         tools:layout="@layout/fragment_prayertime" />
 
     <fragment
         android:id="@+id/navigation_calendar"
         android:name="com.example.quran.ui.CalendarFragment"
-        android:label="@string/title_calendar"
+        android:label="@string/title_home"
         tools:layout="@layout/fragment_calendar" />
 
     <fragment
-        android:id="@+id/navigation_favourite"
-        android:name="com.example.quran.ui.FavouritesFragment"
-        android:label="@string/title_favourite"
-        tools:layout="@layout/fragment_favourites" />
+        android:id="@+id/navigation_bookmark"
+        android:name="com.example.quran.ui.BookMarkFragment"
+        android:label="@string/title_bookmark"
+        tools:layout="@layout/fragment_bookmark" />
 
 </navigation>

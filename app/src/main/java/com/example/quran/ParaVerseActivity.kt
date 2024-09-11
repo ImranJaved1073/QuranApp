@@ -4,12 +4,8 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.Menu
-import android.view.View
-import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.SearchView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -18,9 +14,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quran.adapters.VerseAdapter
 import com.example.quran.dataAccess.SQLiteHelper
+import com.example.quran.models.Bookmark
 import com.example.quran.models.Verse
+import com.example.quran.ui.MiniPlayerFragment
+import com.example.quran.ui.VerseBottomSheetFragment
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -74,27 +76,47 @@ class ParaVerseActivity : AppCompatActivity() {
         bottomSheet.show(supportFragmentManager, VerseBottomSheetFragment.TAG)
     }
 
+    private fun playAyat(verse: Verse) {
+        val miniPlayerFragment = MiniPlayerFragment()
+        miniPlayerFragment.playAudio(verse.suraID, verse.ayaNo)
+        miniPlayerFragment.show(supportFragmentManager, "MiniPlayerFragment")
+    }
+
     private fun fetchAyats(paraNumber: Int, ayahNumberToScroll: Int,isArabicEnabled: Boolean,
                            isTranslationEnabled: Boolean,
                            arabicFontSize: Int,
                            translationFontSize: Int, isEnglishTranslationEnabled: Boolean, englishTranslationFontSize: Int,
                            urduTranslationSelected: Int, englishTranslationSelected: Int) {
-        GlobalScope.launch {
-            try {
-                // Fetch Ayats using Retrofit with coroutines
-                val fetchedAyats = RetrofitClient.api.getParaVerses(paraNumber)
-                val para = fetchedAyats.para
-                val ayahs = fetchedAyats.ayahs
+        GlobalScope.launch(Dispatchers.IO) {
+            // Attempt to fetch data with a timeout
+            val fetchedAyats = withTimeoutOrNull(5000) {
+                try {
+                    RetrofitClient.api.getParaVerses(paraNumber).also { fetchedVerses ->
+                        val para = fetchedVerses.para
+                        val ayahs = fetchedVerses.ayahs
 
-                // Update the UI on the main thread
-                runOnUiThread {
-                    ayatsList = ayahs // Update ayatsList with the fetched data
+                        sqLiteHelper = SQLiteHelper(this@ParaVerseActivity)
+                        if (sqLiteHelper.getVerses(para.paraID).isEmpty()) {
+                            sqLiteHelper.insertVerses(ayahs)
+                        }
+                        updateBookmarkedVerses(ayahs, sqLiteHelper.getAllBookmarks())
+
+                    }
+                } catch (e: IOException) {
+                    null
+                } catch (e: HttpException) {
+                    null
+                }
+            }
+            withContext(Dispatchers.Main) {
+                if (fetchedAyats != null) {
+                    ayatsList = fetchedAyats.ayahs // Update ayatsList with the fetched data
                     verseAdapter = VerseAdapter(ayatsList,isArabicEnabled,
                         isTranslationEnabled,
                         arabicFontSize,
-                        translationFontSize, isEnglishTranslationEnabled, englishTranslationFontSize,urduTranslationSelected, englishTranslationSelected){ verse ->
-                        showBottomSheet(verse)
-                    }
+                        translationFontSize, isEnglishTranslationEnabled, englishTranslationFontSize,urduTranslationSelected, englishTranslationSelected,
+                        { verse -> showBottomSheet(verse) }, // Bottom sheet click listener
+                        { verse -> playAyat(verse) })
                     recyclerView.adapter = verseAdapter
 
                     // Scroll to the specified Ayah if provided
@@ -103,20 +125,73 @@ class ParaVerseActivity : AppCompatActivity() {
                             ayatsList.indexOfFirst { it.ayaNo == ayahNumberToScroll }
                         )
                     }
+                } else {
+                    fetchFromLocalDatabase(
+                        paraNumber,
+                        ayahNumberToScroll,
+                        isArabicEnabled,
+                        isTranslationEnabled,
+                        arabicFontSize,
+                        translationFontSize,
+                        isEnglishTranslationEnabled,
+                        englishTranslationFontSize,
+                        urduTranslationSelected,
+                        englishTranslationSelected
+                    )
                 }
-            } catch (e: IOException) {
-                // Handle network errors
-                runOnUiThread {
-                    Toast.makeText(this@ParaVerseActivity, "Network Error: ${e.message}", Toast.LENGTH_SHORT).show()
-                    Log.e("VerseFragment", "Network Error: ${e.message}")
-                }
-            } catch (e: HttpException) {
-                // Handle API errors
-                runOnUiThread {
-                    Toast.makeText(this@ParaVerseActivity, "API Error: ${e.message}", Toast.LENGTH_SHORT).show()
-                    Log.e("VerseFragment", "API Error: ${e.message}")
-                }
+
             }
+        }
+    }
+
+    private fun fetchFromLocalDatabase(
+        paraNumber: Int,
+        ayahNumberToScroll: Int,
+        isArabicEnabled: Boolean,
+        isTranslationEnabled: Boolean,
+        arabicFontSize: Int,
+        translationFontSize: Int,
+        isEnglishTranslationEnabled: Boolean,
+        englishTranslationFontSize: Int,
+        urduTranslationSelected: Int,
+        englishTranslationSelected: Int
+    ) {
+        try {
+            sqLiteHelper = SQLiteHelper(this)
+            ayatsList = sqLiteHelper.getParaVerses(paraNumber)
+            updateBookmarkedVerses(ayatsList, sqLiteHelper.getAllBookmarks())
+            if (ayatsList.isNotEmpty()) {
+                verseAdapter = VerseAdapter(
+                    ayatsList,
+                    isArabicEnabled,
+                    isTranslationEnabled,
+                    arabicFontSize,
+                    translationFontSize,
+                    isEnglishTranslationEnabled,
+                    englishTranslationFontSize,
+                    urduTranslationSelected,
+                    englishTranslationSelected,
+                    { verse -> showBottomSheet(verse) }, // Bottom sheet click listener
+                    { verse -> playAyat(verse) } // Play button click listener
+                )
+
+                recyclerView.adapter = verseAdapter
+                if (ayahNumberToScroll != -1) {
+                    recyclerView.scrollToPosition(
+                        ayatsList.indexOfFirst { it.ayaNo == ayahNumberToScroll }
+                    )
+                }
+            } else {
+                Toast.makeText(this, "No data available offline.", Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error: Database not initialized.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun updateBookmarkedVerses(verses: List<Verse>, bookmarkedAyats: List<Bookmark>) {
+        verses.forEach { verse ->
+            verse.isBookmarked = bookmarkedAyats.any { it.ayaID == verse.ayaID }
         }
     }
 

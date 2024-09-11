@@ -6,201 +6,243 @@
     android:layout_height="match_parent"
     tools:context=".ui.CalendarFragment">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/prayer_card"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:background="@drawable/gradient_banner"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="8dp"
+    <!-- Adding NestedScrollView to make the layout scrollable -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp">
-
-            <!-- Left Section (Time and Date Info) -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/currentDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Thu 05-09-24"
-                    android:textColor="@android:color/black"
-                    android:textSize="14sp"
-                    android:paddingTop="4dp"
-                    android:textStyle="bold"/>
-
-                <TextView
-                    android:id="@+id/currentTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="05:41 am"
-                    android:textColor="@android:color/black"
-                    android:textSize="18sp"
-                    android:paddingTop="4dp"
-                    android:textStyle="bold"/>
-
-            </LinearLayout>
-
-            <!-- Center Section (Illustration) -->
-            <ImageView
-                android:id="@+id/prayingImage"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:src="@drawable/ic_madinah"/>
-
-            <!-- Right Section (Date Info) -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="end"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/dateNumber"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black"/>
-
-                <TextView
-                    android:id="@+id/islamicDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Rabi I, 1446"
-                    android:textColor="@android:color/black"
-                    android:textSize="14sp"
-                    android:paddingTop="4dp"/>
-
-            </LinearLayout>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
-
-    <!-- Ayah Card View positioned below the prayer card -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/ayah_card"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#EEFDFCFC"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="2dp"
-        android:layout_margin="16dp"
-        app:layout_constraintTop_toBottomOf="@id/prayer_card"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <!-- Enclose Ayah Content -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:paddingBottom="16dp">
 
-            <!-- Ayat of the Day Header -->
-            <TextView
-                android:id="@+id/ayatOfTheDay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ayat of the Day"
-                android:fontFamily="@font/ubuntu"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_gravity="center_horizontal"
-                android:paddingBottom="8dp"/>
-
-            <!-- Header Row with Ayah Number and Overflow Menu -->
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:layout_height="match_parent"
+                android:background="@color/light_gray_transparent"
+                android:gravity="center"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp">
 
-                <!-- Ayah Number Label -->
                 <TextView
-                    android:id="@+id/ayahNumberLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="113:113"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/_10sdp"
-                    android:textStyle="bold"
-                    android:layout_marginEnd="8dp"/>
-
-                <!-- Space for overflow menu -->
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
-
-                <!-- Overflow Menu Button -->
-                <TextView
-                    android:id="@+id/surah_Name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_height="match_parent"
+                    android:text="122126123"
+                    android:gravity="center"
+                    android:textSize="@dimen/_50ssp"
+                    android:textColor="@color/black"
                     android:fontFamily="@font/suranamefont"
-                    android:textSize="@dimen/_20sdp"/>
-            </LinearLayout>
+                    app:tint="@color/white" />
+            </RelativeLayout>
 
-            <!-- Ayah Arabic Text -->
-            <TextView
-                android:id="@+id/ayahArabicText"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/prayer_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ"
-                android:fontFamily="@font/noorehuda"
-                android:textAlignment="center"
-                android:textColor="@android:color/black"
-                android:textSize="@dimen/_18sdp"/>
+                android:layout_margin="16dp"
+                android:background="@drawable/gradient_banner"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="8dp">
 
-            <!-- Divider -->
-            <View
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <!-- Left Section (Time and Date Info) -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/currentDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Thu 05-09-24"
+                            android:textColor="@android:color/black"
+                            android:textSize="14sp"
+                            android:paddingTop="4dp"
+                            android:textStyle="bold"/>
+
+                        <TextView
+                            android:id="@+id/currentTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="05:41 am"
+                            android:textColor="@android:color/black"
+                            android:textSize="18sp"
+                            android:paddingTop="4dp"
+                            android:textStyle="bold"/>
+
+                    </LinearLayout>
+
+                    <!-- Center Section (Illustration) -->
+                    <ImageView
+                        android:id="@+id/prayingImage"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/ic_madinah"/>
+
+                    <!-- Right Section (Date Info) -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/dateNumber"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1"
+                            android:textColor="@android:color/black"
+                            android:textSize="24sp"
+                            android:textStyle="bold"/>
+
+                        <TextView
+                            android:id="@+id/islamicDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Rabi I, 1446"
+                            android:fontFamily="@font/ubuntu"
+                            android:textColor="@android:color/black"
+                            android:textSize="14sp"
+                            android:paddingTop="4dp"/>
+
+                        <TextView
+                            android:id="@+id/islamicYear"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_2sdp"
+                            android:fontFamily="@font/ubuntu"
+                            android:paddingTop="5dp"
+                            android:text="1446"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/_13sdp"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Ayah Card View positioned below the prayer card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/ayah_card"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="10dp"
-                android:background="@android:drawable/divider_horizontal_dark"/>
-
-            <!-- English Translation -->
-            <TextView
-                android:id="@+id/ayahEnglishTranslation"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="8dp"
-                android:fontFamily="@font/ubuntu"
-                android:text="In the name of Allah, the Most Gracious, the Most Merciful."
-                android:textColor="@android:color/black"
-                android:textSize="@dimen/_15sdp"/>
+                android:backgroundTint="#EEFDFCFC"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="2dp"
+                android:layout_margin="16dp">
 
-            <!-- Urdu Translation -->
-            <TextView
-                android:id="@+id/ayahUrduTranslation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="8dp"
-                android:text="شروع الله کا نام لے کر جو بڑا مہربان نہایت رحم والا ہے"
-                android:textAlignment="center"
-                android:textColor="@android:color/black"
-                android:fontFamily="@font/jameelnoorinastaleeq"
-                android:textSize="@dimen/_18sdp"/>
+                <!-- Enclose Ayah Content -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="10dp">
 
+                    <!-- Ayat of the Day Header -->
+                    <TextView
+                        android:id="@+id/ayatOfTheDay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ayat of the Day"
+                        android:fontFamily="@font/ubuntu"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingBottom="8dp"/>
+
+                    <!-- Header Row with Ayah Number and Overflow Menu -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <!-- Ayah Number Label -->
+                        <TextView
+                            android:id="@+id/ayahNumberLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="113:113"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/_10sdp"
+                            android:textStyle="bold"
+                            android:layout_marginEnd="8dp"/>
+
+                        <!-- Space for overflow menu -->
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"/>
+
+                        <!-- Overflow Menu Button -->
+                        <TextView
+                            android:id="@+id/surah_Name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1"
+                            android:fontFamily="@font/suranamefont"
+                            android:textSize="@dimen/_20sdp"/>
+                    </LinearLayout>
+
+                    <!-- Ayah Arabic Text -->
+                    <TextView
+                        android:id="@+id/ayahArabicText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:text="بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ"
+                        android:fontFamily="@font/noorehuda"
+                        android:textAlignment="center"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/_24sdp"/>
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@android:drawable/divider_horizontal_dark"/>
+
+                    <!-- English Translation -->
+                    <TextView
+                        android:id="@+id/ayahEnglishTranslation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textAlignment="center"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/ubuntu"
+                        android:text="In the name of Allah, the Most Gracious, the Most Merciful."
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/_12sdp"/>
+
+                    <!-- Urdu Translation -->
+                    <TextView
+                        android:id="@+id/ayahUrduTranslation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp"
+                        android:text="شروع الله کا نام لے کر جو بڑا مہربان نہایت رحم والا ہے"
+                        android:textAlignment="center"
+                        android:textColor="@android:color/black"
+                        android:fontFamily="@font/jameelnoorinastaleeq"
+                        android:textSize="@dimen/_18sdp"/>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

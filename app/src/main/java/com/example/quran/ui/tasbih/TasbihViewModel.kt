@@ -1,4 +1,4 @@
-package com.example.quran
+package com.example.quran.ui.tasbih
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
