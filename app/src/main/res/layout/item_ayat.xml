@@ -86,8 +86,10 @@
                 android:letterSpacing="0.05"
                 android:lineSpacingExtra="@dimen/_4sdp"
                 android:text="بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ"
+                android:justificationMode="inter_word"
                 android:textColor="@color/blue"
                 android:textSize="@dimen/_17ssp"
+                android:textAlignment="center"
                 tools:ignore="RtlCompat" />
 
             <!-- Divider -->
@@ -124,6 +126,7 @@
                 android:gravity="clip_horizontal"
                 android:letterSpacing="0.03"
                 android:lineSpacingExtra="8dp"
+                android:justificationMode="inter_word"
                 android:text="In the name of Allah, the Most Gracious, the Most Merciful."
                 android:textColor="@color/englishcolor"
                 android:textSize="@dimen/_10sdp" />
@@ -137,6 +140,7 @@
                 android:fontFamily="@font/jameelnoorinastaleeq"
                 android:letterSpacing="0.03"
                 android:lineSpacingExtra="8dp"
+                android:justificationMode="inter_word"
                 android:text="شروع الله کا نام لے کر جو بڑا مہربان نہایت رحم والا ہے"
                 android:layout_gravity="end"
                 android:textColor="@color/green"

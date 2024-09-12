@@ -3,9 +3,16 @@ package com.example.quran
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.Menu
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -28,6 +35,7 @@ import java.io.IOException
 
 class ParaVerseActivity : AppCompatActivity() {
 
+    private var count: Int = 0
     private lateinit var recyclerView: RecyclerView
     private lateinit var verseAdapter: VerseAdapter
     private var ayatsList: List<Verse> = emptyList() // Initialize as an empty list
@@ -238,29 +246,112 @@ class ParaVerseActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Find by $searchType")
 
+        // Creating a list of distinct Surah IDs or names dynamically
+        val surahListOnSpinner = ayatsList.map { it.suraID }.distinct()  // Replace 'suraID' with 'suraName' if needed
+
+        // Create the spinner and set its adapter
+        val spinner = Spinner(this)
+        val adapter = ArrayAdapter(
+            this,
+            R.layout.simple_spinner_item_custom,
+            surahListOnSpinner  // Assuming you want to show IDs; replace with names if you have them
+        )
+        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item_custom)
+        spinner.adapter = adapter
+
         // Set up the input field
         val input = EditText(this)
-        input.hint = "Enter $searchType Number"
-        builder.setView(input)
 
-        builder.setPositiveButton("Find") { _, _ ->
-            val query = input.text.toString()
-            searchAyat(query, searchType)
+        // Set layout parameters with margin for spinner
+        val spinnerLayoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        spinnerLayoutParams.setMargins(16, 16, 16, 8)  // Set margins (left, top, right, bottom)
+        spinner.layoutParams = spinnerLayoutParams
+
+        // Set layout parameters with margin for input field
+        val inputLayoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        inputLayoutParams.setMargins(16, 8, 16, 16)
+        input.layoutParams = inputLayoutParams
+
+        // Add both spinner and input field to the dialog layout
+        val layout = LinearLayout(this)
+        layout.orientation = LinearLayout.VERTICAL
+        layout.setPadding(24, 24, 24, 24)  // Set padding (left, top, right, bottom)
+        layout.addView(spinner)
+        layout.addView(input)
+
+        builder.setView(layout)
+
+        // Initial calculation of count based on the first Surah selected
+        fun updateCount() {
+            val selectedSurahId = spinner.selectedItem.toString().toInt()  // Assuming suraID is an integer
+            val count = if (searchType == "Ayah") {
+                ayatsList.filter { selectedSurahId == it.suraID }.size
+            } else {
+                ayatsList.filter { selectedSurahId == it.suraID }.groupBy { it.rakuID }.size
+            }
+            val startingNumber = if (searchType == "Ayah") {
+                ayatsList.firstOrNull { it.suraID == selectedSurahId }?.ayaNo ?: 1
+            } else {
+                ayatsList.firstOrNull { it.suraID == selectedSurahId }?.rakuID ?: 1
+            }
+            input.hint = "$startingNumber-${count + startingNumber - 1}"
         }
-        builder.setNegativeButton("Cancel", null)
-        builder.show()
+
+        // Set listener to update count whenever a new Surah is selected
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                updateCount()  // Update the count when a Surah is selected
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Do nothing
+            }
+        }
+
+        // Initialize count and input hint for the first Surah selected
+        updateCount()
+
+        // Create the dialog and "Find" button
+        val dialog = builder.create()
+
+        // Set positive button initially disabled
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Find") { _, _ ->
+            val query = input.text.toString()
+            searchAyat(query, spinner.selectedItem.toString(), searchType)
+        }
+
+        dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel") { _, _ -> dialog.dismiss() }
+
+        dialog.show()
+
+        // Disable "Find" button initially
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
+
+        // Add TextWatcher to enable/disable the "Find" button based on input text
+        input.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // Enable the "Find" button only if there is text in the EditText
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = s?.isNotEmpty() == true
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
     }
 
-    private fun searchAyat(query: String, searchType: String) {
+
+    private fun searchAyat(ayatNo: String,surahNo: String, searchType: String) {
         if (ayatsList.isNotEmpty()) {
             val index = when (searchType) {
-                "Ruku" -> ayatsList.indexOfFirst { it.rakuID.toString() == query }
-                "Ayah" -> ayatsList.indexOfFirst {
-                    it.ayaNo.toString() == query ||
-                            it.arabicText.contains(query, ignoreCase = true) ||
-                            it.drMohsinKhan.contains(query, ignoreCase = true) ||
-                            it.fatehMuhammadJalandhrield.contains(query, ignoreCase = true)
-                }
+                "Ruku" -> ayatsList.indexOfFirst { it.rakuID.toString() == ayatNo && it.suraID.toString() == surahNo }
+                "Ayah" -> ayatsList.indexOfFirst { it.ayaNo.toString() == ayatNo && it.suraID.toString() == surahNo }
                 else -> -1
             }
 
@@ -268,29 +359,31 @@ class ParaVerseActivity : AppCompatActivity() {
                 recyclerView.scrollToPosition(index)
             } else {
                 Toast.makeText(this, "No results found", Toast.LENGTH_SHORT).show()
+                openSearchDialog(searchType)
             }
         } else {
             Toast.makeText(this, "No data loaded", Toast.LENGTH_SHORT).show()
+            openSearchDialog(searchType)
         }
     }
 
-    private fun searchAyat(query: String) {
-        // Ensure ayatsList is not empty or null
-        if (ayatsList.isNotEmpty()) {
-            val index = ayatsList.indexOfFirst {
-                it.pAyatID.toString() == query ||
-                        it.pAyatID.toString().contains(query, ignoreCase = true)
-            }
-
-            if (index != -1) {
-                recyclerView.scrollToPosition(index)
-            } else {
-                Toast.makeText(this, "Invalid Ayat No", Toast.LENGTH_SHORT).show()
-            }
-        } else {
-            Toast.makeText(this, "No data loaded", Toast.LENGTH_SHORT).show()
-        }
-    }
+//    private fun searchAyat(query: String) {
+//        // Ensure ayatsList is not empty or null
+//        if (ayatsList.isNotEmpty()) {
+//            val index = ayatsList.indexOfFirst {
+//                it.pAyatID.toString() == query ||
+//                        it.pAyatID.toString().contains(query, ignoreCase = true)
+//            }
+//
+//            if (index != -1) {
+//                recyclerView.scrollToPosition(index)
+//            } else {
+//                Toast.makeText(this, "Invalid Ayat No", Toast.LENGTH_SHORT).show()
+//            }
+//        } else {
+//            Toast.makeText(this, "No data loaded", Toast.LENGTH_SHORT).show()
+//        }
+//    }
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()

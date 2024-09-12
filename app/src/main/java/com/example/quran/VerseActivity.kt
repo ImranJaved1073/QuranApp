@@ -12,6 +12,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -276,16 +277,31 @@ class VerseActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Find by $searchType")
 
+        // Determine count based on searchType
         if (searchType == "Ruku")
             count = ayatsList.groupBy { it.rakuID }.size
         else
-            count= ayatsList.size
-
+            count = ayatsList.size
 
         // Set up the input field
         val input = EditText(this)
         input.hint = "1-$count"
-        builder.setView(input)
+
+        // Set layout parameters with margin for input field
+        val inputLayoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        inputLayoutParams.setMargins(16, 16, 16, 16)  // Set margins (left, top, right, bottom)
+        input.layoutParams = inputLayoutParams
+
+        // Create a LinearLayout to contain the EditText and set padding
+        val layout = LinearLayout(this)
+        layout.orientation = LinearLayout.VERTICAL
+        layout.setPadding(24, 24, 24, 24)  // Set padding (left, top, right, bottom)
+        layout.addView(input)
+
+        builder.setView(layout)
 
         // Create the "Find" button
         builder.setPositiveButton("Find") { _, _ ->
@@ -293,6 +309,7 @@ class VerseActivity : AppCompatActivity() {
             searchAyat(query, searchType)
         }
         builder.setNegativeButton("Cancel", null)
+
         val dialog = builder.create()
 
         // Set the "Find" button to be initially disabled
@@ -319,6 +336,7 @@ class VerseActivity : AppCompatActivity() {
     }
 
 
+
     private fun searchAyat(query: String, searchType: String) {
         if (ayatsList.isNotEmpty()) {
             val index = when (searchType) {
@@ -331,6 +349,7 @@ class VerseActivity : AppCompatActivity() {
                 recyclerView.scrollToPosition(index)
             } else {
                 Toast.makeText(this, "Invalid Input", Toast.LENGTH_SHORT).show()
+                openSearchDialog(searchType)
             }
         } else {
             Toast.makeText(this, "No data loaded", Toast.LENGTH_SHORT).show()
