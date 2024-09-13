@@ -32,6 +32,9 @@ It integrates current **Islamic date**, daily Ayat, customizable settings, and a
 ### Bookmark Section:
 - **Bookmarks**: Displays all saved bookmarks. Users can navigate back to the saved verses.
 
+### Offline Access:
+- **Offline Reading**: Users can access the complete Quran and their bookmarks even when offline, ensuring a seamless reading experience without an internet connection.
+
 ## API Integration
 This app interacts with custom **web APIs** developed using **.NET C#** and published on **Azure** for:
 - Fetching Hijri dates.
