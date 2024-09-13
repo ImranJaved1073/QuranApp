@@ -63,5 +63,3 @@ This app interacts with custom **web APIs** developed using **.NET C#** and publ
 ## Contributing
 Feel free to open issues or contribute to the project by submitting pull requests.
 
-## License
-This project is licensed under the MIT License.
